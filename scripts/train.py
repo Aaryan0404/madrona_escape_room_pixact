@@ -94,6 +94,8 @@ arg_parser.add_argument('--fp16', action='store_true')
 arg_parser.add_argument('--gpu-sim', action='store_true')
 arg_parser.add_argument('--profile-report', action='store_true')
 
+arg_parser.add_argument('--rawPixels', action='store_true')
+
 args = arg_parser.parse_args()
 
 sim = madrona_escape_room.SimManager(
@@ -101,6 +103,7 @@ sim = madrona_escape_room.SimManager(
     gpu_id = args.gpu_id,
     num_worlds = args.num_worlds,
     auto_reset = True,
+    enable_batch_renderer = True if args.rawPixels else False,
 )
 
 ckpt_dir = Path(args.ckpt_dir)
@@ -114,8 +117,8 @@ else:
 
 ckpt_dir.mkdir(exist_ok=True, parents=True)
 
-obs, num_obs_features = setup_obs(sim)
-policy = make_policy(num_obs_features, args.num_channels, args.separate_value)
+obs, dim_info = setup_obs(sim, args.rawPixels) # if rawPixels, dim_info = 4 (# of channels, rgbd), else dim_info = 94 (# of features)
+policy = make_policy(dim_info, args.num_channels, args.separate_value, args.rawPixels)
 
 actions = sim.action_tensor().to_torch()
 dones = sim.done_tensor().to_torch()
