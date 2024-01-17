@@ -51,7 +51,9 @@ class MLP(nn.Module):
                     nn.init.constant_(layer.bias, val=0)
 
     def forward(self, inputs):
+        # convert inputs to half precision
         # print("MLP forward output shape: ", self.net(inputs).shape)
+        inputs = inputs.half()
         return self.net(inputs)
 
 class LinearLayerDiscreteActor(DiscreteActor):

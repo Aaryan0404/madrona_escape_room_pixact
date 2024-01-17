@@ -28,6 +28,8 @@ arg_parser.add_argument('--fp16', action='store_true')
 
 arg_parser.add_argument('--gpu-sim', action='store_true')
 
+arg_parser.add_argument('--rawPixels', action='store_true')
+
 args = arg_parser.parse_args()
 
 sim = madrona_escape_room.SimManager(
@@ -35,15 +37,17 @@ sim = madrona_escape_room.SimManager(
     gpu_id = args.gpu_id,
     num_worlds = args.num_worlds,
     auto_reset = True,
+    enable_batch_renderer = True if args.rawPixels else False,
 )
 
-obs, num_obs_features = setup_obs(sim)
-policy = make_policy(num_obs_features, args.num_channels, args.separate_value)
+obs, dim_info = setup_obs(sim, args.rawPixels) # if rawPixels, dim_info = 4 (# of channels, rgbd), else dim_info = 94 (# of features)
+
+policy = make_policy(dim_info, args.num_channels, args.separate_value, args.rawPixels)
 
 weights = LearningState.load_policy_weights(args.ckpt_path)
 policy.load_state_dict(weights)
 
-policy = policy.to(torch.device(f"cuda:{args.gpu_id}"))
+policy = policy.to(torch.device(f"cuda:{args.gpu_id}")).to(torch.float16 if args.fp16 else torch.float32)
 
 actions = sim.action_tensor().to_torch()
 dones = sim.done_tensor().to_torch()
@@ -53,7 +57,8 @@ cur_rnn_states = []
 
 for shape in policy.recurrent_cfg.shapes:
     cur_rnn_states.append(torch.zeros(
-        *shape[0:2], actions.shape[0], shape[2], dtype=torch.float32, device=torch.device('cpu')))
+        *shape[0:2], actions.shape[0], shape[2], dtype=torch.float32 if not args.fp16 else torch.float16, 
+        device=torch.device('cpu') if not args.gpu_sim else torch.device(f"cuda:{args.gpu_id}")))
 
 if args.action_dump_path:
     action_log = open(args.action_dump_path, 'wb')
@@ -62,6 +67,7 @@ else:
 
 for i in range(args.num_steps):
     with torch.no_grad():
+
         action_dists, values, cur_rnn_states = policy(cur_rnn_states, *obs)
         action_dists.best(actions)
 
@@ -71,10 +77,11 @@ for i in range(args.num_steps):
         actions.cpu().numpy().tofile(action_log)
 
     print()
-    print("Self:", obs[0])
-    print("Partners:", obs[1])
-    print("Room Entities:", obs[2])
-    print("Lidar:", obs[3])
+    # obs is now pixels so below won't work
+    # print("Self:", obs[0])
+    # print("Partners:", obs[1])
+    # print("Room Entities:", obs[2])
+    # print("Lidar:", obs[3])
 
     print("Move Amount Probs")
     print(" ", np.array_str(probs[0][0].cpu().numpy(), precision=2, suppress_small=True))

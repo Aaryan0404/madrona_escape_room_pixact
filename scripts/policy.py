@@ -101,16 +101,24 @@ def process_pixels(rgb, depth):
     assert(not torch.isnan(rgb).any())
     assert(not torch.isinf(rgb).any())
 
+    # convert depth nan or inf to 0
+    depth[torch.isnan(depth)] = 0
+    depth[torch.isinf(depth)] = 0
+
     assert(not torch.isnan(depth).any())
     assert(not torch.isinf(depth).any())
+
+    # cast to half precision
+    rgb = rgb.to(torch.float16)
+    depth = depth.to(torch.float16)
 
     obs = torch.cat([
         rgb[..., 0:3],
         depth,
-    ], dim=-1)
+    ], dim=-1).to(torch.float16)
 
-    CNN_net = CNN(in_channels = obs.shape[-1]).to(obs.device).half()
-    return CNN_net(obs)
+    CNN_net = CNN(in_channels = obs.shape[-1]).to(obs.device).to(torch.float16)
+    return CNN_net(obs).to(torch.float16)
 
 def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
     if raw_pixels:

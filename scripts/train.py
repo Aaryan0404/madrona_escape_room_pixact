@@ -110,7 +110,8 @@ ckpt_dir = Path(args.ckpt_dir)
 
 learning_cb = LearningCallback(ckpt_dir, args.profile_report)
 
-if torch.cuda.is_available():
+# mikey: temporarily disabling gpu usage so i can run code without interfering with tmux run
+if False and torch.cuda.is_available():
     dev = torch.device(f'cuda:{args.gpu_id}')
 else:
     dev = torch.device('cpu')
