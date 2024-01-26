@@ -78,8 +78,8 @@ arg_parser.add_argument('--restore', type=int)
 
 arg_parser.add_argument('--num-worlds', type=int, required=True)
 arg_parser.add_argument('--num-updates', type=int, required=True)
-arg_parser.add_argument('--steps-per-update', type=int, default=40)
-arg_parser.add_argument('--num-bptt-chunks', type=int, default=8)
+arg_parser.add_argument('--steps-per-update', type=int, default=32)
+arg_parser.add_argument('--num-bptt-chunks', type=int, default=4)
 
 # num updaates = 40, reserved = 28, use = 22
 # num updates = 24, reserved = 16, use = 13

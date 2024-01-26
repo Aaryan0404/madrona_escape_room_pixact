@@ -6,7 +6,7 @@ from madrona_escape_room_learn import (
 )
 
 from madrona_escape_room_learn.models import (
-    CNN, MLP, LinearLayerDiscreteActor, LinearLayerCritic,
+    CNN, LinearLayerDiscreteActor, LinearLayerCritic,
     DenseLayerDiscreteActor, DenseLayerCritic,
 )
 
