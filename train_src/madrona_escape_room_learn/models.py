@@ -11,9 +11,10 @@ class CNN(nn.Module):
 
         self.conv1 = nn.Conv2d(in_channels, 32, 3, 2, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 2, 1)
-        self.conv3 = nn.Conv2d(64, 64, 3, 2, 1)
-        self.conv4 = nn.Conv2d(64, 64, 3, 2, 1)
-        self.mlp = MLP(input_dim = 256, num_channels = 256, num_layers = 1)
+        self.conv3 = nn.Conv2d(64, 128, 3, 2, 1)
+        self.conv4 = nn.Conv2d(128, 128, 3, 2, 1)
+        self.lin1  = nn.Linear(512, 256)
+        self.lin2  = nn.Linear(256, 256)
         self.flatten = nn.Flatten()
 
     def forward(self, inputs):
@@ -22,38 +23,10 @@ class CNN(nn.Module):
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
         x = self.flatten(F.relu(self.conv4(x)))
-        x = self.mlp(x)
+        x = F.relu(self.lin1(x))
+        x = F.relu(self.lin2(x))
+
         return x
-
-class MLP(nn.Module):
-    def __init__(self, input_dim, num_channels, num_layers):
-        super().__init__()
-
-        layers = [
-            nn.Linear(input_dim, num_channels),
-            nn.LayerNorm(num_channels),
-            nn.ReLU(),
-        ]
-        for i in range(num_layers - 1):
-            layers.append(nn.Linear(num_channels, num_channels))
-            layers.append(nn.LayerNorm(num_channels))
-            layers.append(nn.ReLU())
-
-        self.net = nn.Sequential(*layers)
-
-        for layer in self.net:
-            if isinstance(layer, nn.Linear):
-                nn.init.kaiming_normal_(
-                    layer.weight, nn.init.calculate_gain("relu"))
-                if layer.bias is not None:
-                    nn.init.constant_(layer.bias, val=0)
-
-    def forward(self, inputs):
-        # convert inputs to half precision
-        # print("Input shape: ", inputs.shape)
-        # print("MLP forward output shape: ", self.net(inputs).shape)
-        inputs = inputs.half()
-        return self.net(inputs)
 
 class LinearLayerDiscreteActor(DiscreteActor):
     def __init__(self, actions_num_buckets, in_channels):
