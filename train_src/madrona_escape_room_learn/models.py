@@ -14,7 +14,9 @@ class CNN(nn.Module):
         self.conv3 = nn.Conv2d(64, 128, 3, 2, 1)
         self.conv4 = nn.Conv2d(128, 128, 3, 2, 1)
         self.lin1  = nn.Linear(512, 256)
+        self.lay1  = nn.LayerNorm(256)
         self.lin2  = nn.Linear(256, 256)
+        self.lay2  = nn.LayerNorm(256)
         self.flatten = nn.Flatten()
 
     def forward(self, inputs):
@@ -24,7 +26,9 @@ class CNN(nn.Module):
         x = F.relu(self.conv3(x))
         x = self.flatten(F.relu(self.conv4(x)))
         x = F.relu(self.lin1(x))
+        x = self.lay1(x)
         x = F.relu(self.lin2(x))
+        x = self.lay2(x)
 
         return x
 
