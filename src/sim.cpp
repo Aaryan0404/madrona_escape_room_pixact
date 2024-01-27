@@ -525,6 +525,9 @@ inline void rewardSystem(Engine &,
                 out_reward.v = new_progress * consts::rewardPerDistB;
                 progress.bestDistance = cur_dist;
             }
+            else {
+                out_reward.v = consts::slackReward;
+            }
         }
     }
     else {
