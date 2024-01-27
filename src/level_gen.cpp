@@ -490,7 +490,7 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
                 dy = pos_y - right_button_y;
             }
 
-            ctx.get<Progress>(agent_entity).bestDistance = sqrtf(dx * dx + dy * dy);
+            ctx.get<Progress>(agent_entity).initialDist = sqrt(dx * dx + dy * dy);
         }
     }
 

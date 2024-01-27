@@ -131,7 +131,7 @@ struct StepsRemaining {
 // Tracks progress the agent has made through the challenge, used to add
 // reward when more progress has been made
 struct Progress {
-    float bestDistance;
+    float initialDist;
     float maxY;
     float buttonX;
     float buttonY;
