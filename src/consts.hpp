@@ -30,8 +30,8 @@ inline constexpr float rewardPerDist = 0.005f;
 inline constexpr float rewardPerDistB = 0.0075f;
 
 // Reward for button press
-inline constexpr float buttonReward = 0.01f; 
-inline constexpr float rewardPerAllButtons = 0.015f;
+inline constexpr float buttonReward = 0.015f; 
+inline constexpr float rewardPerAllButtons = 0.02f;
 
 // Each step that the agents don't make additional progress they get a small
 // penalty reward

@@ -503,11 +503,15 @@ inline void rewardSystem(Engine &,
         reward_pos_x = fminf(pos.x, consts::worldWidth);
     }
 
-    // reward for minimizing distance to button
-    float dx = reward_pos_x - progress.buttonX;
-    float dy = reward_pos_y - progress.buttonY;
+    float reward_pos_x_t = reward_pos_x > 0 ? reward_pos_x : -reward_pos_x;
+    float reward_pos_y_t = reward_pos_y > 0 ? reward_pos_y : -reward_pos_y;
+    float bxt = progress.buttonX > 0 ? progress.buttonX : -progress.buttonX;
+    float byt = progress.buttonY > 0 ? progress.buttonY : -progress.buttonY;
 
-    // abs value of dx and dy
+    // reward for minimizing distance to button
+    float dx = reward_pos_x_t - bxt;
+    float dy = reward_pos_y_t - byt;
+
     dx = (dx < 0) ? -dx : dx;
     dy = (dy < 0) ? -dy : dy;
 
@@ -519,16 +523,8 @@ inline void rewardSystem(Engine &,
         }
         else {
             float cur_dist = sqrtf(dx * dx + dy * dy);
-            float new_progress = cur_dist - progress.bestDistance;
-
-            if (new_progress > 0) {
-                out_reward.v = new_progress * consts::rewardPerDistB;
-                progress.bestDistance = cur_dist;
-            }
-            else {
-                out_reward.v = consts::slackReward;
-                // slack for not getting closer to button
-            }
+            // exponentially less reward for being further away
+            out_reward.v = expf(-1.0f * (cur_dist + progress.initialDist)); 
         }
     }
     else {
