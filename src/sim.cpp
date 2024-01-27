@@ -527,6 +527,7 @@ inline void rewardSystem(Engine &,
             }
             else {
                 out_reward.v = consts::slackReward;
+                // slack for not getting closer to button
             }
         }
     }
