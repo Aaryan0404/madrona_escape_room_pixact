@@ -30,10 +30,11 @@ inline constexpr float rewardPerDist = 0.05f;
 
 // Reward for button press
 inline constexpr float buttonReward = 0.015f; 
+// Reward for pressing all buttons
 inline constexpr float rewardPerAllButtons = 0.02f;
 
 // Each step that the agents don't make additional progress they get a small
-// penalty reward
+// penalty reward (progress towards button or in y direction)
 inline constexpr float slackReward = -0.01f;
 
 // Steps per episode
