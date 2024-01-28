@@ -114,9 +114,9 @@ def process_pixels(rgb, depth):
     height = rgb.shape[2]
 
     CNN_input = torch.cat([rgb, depth], dim=-1) # shape = B (N * A), W, H, C
-    CNN_input = CNN_input.reshape(rgb.shape[0], width//2, 2, height//2, 2, rgb.shape[-1] + depth.shape[-1])
-    CNN_input = CNN_input.permute(0, 1, 3, 2, 4, 5)
-    CNN_input = CNN_input.reshape(rgb.shape[0], width//2, height//2, 2 * 2 * (rgb.shape[-1] + depth.shape[-1]))
+    # CNN_input = CNN_input.reshape(rgb.shape[0], width//2, 2, height//2, 2, rgb.shape[-1] + depth.shape[-1])
+    # CNN_input = CNN_input.permute(0, 1, 3, 2, 4, 5)
+    # CNN_input = CNN_input.reshape(rgb.shape[0], width//2, height//2, 2 * 2 * (rgb.shape[-1] + depth.shape[-1]))
 
     return CNN_input.to(torch.float16)
 
