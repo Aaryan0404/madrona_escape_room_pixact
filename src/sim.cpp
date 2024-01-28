@@ -503,43 +503,45 @@ inline void rewardSystem(Engine &,
         reward_pos_x = fminf(pos.x, consts::worldWidth);
     }
 
-    float reward_pos_x_t = reward_pos_x > 0 ? reward_pos_x : -reward_pos_x;
-    float reward_pos_y_t = reward_pos_y > 0 ? reward_pos_y : -reward_pos_y;
-    float bxt = progress.buttonX > 0 ? progress.buttonX : -progress.buttonX;
-    float byt = progress.buttonY > 0 ? progress.buttonY : -progress.buttonY;
+    // int room_idx = progress.maxY / (consts::roomLength * 1.025f);
+    int room_idx = 0; 
 
-    // reward for minimizing distance to button
-    float dx = reward_pos_x_t - bxt;
-    float dy = reward_pos_y_t - byt;
+    LevelState &level = ctx.singleton<LevelState>();
+    Entity button = level.rooms[room_idx].entities[progress.button_id];
 
-    dx = (dx < 0) ? -dx : dx;
-    dy = (dy < 0) ? -dy : dy;
+    float b_x = ctx.get<Position>(button).x;
+    float b_y = ctx.get<Position>(button).y;
 
-    if (progress.buttonX != -1 && progress.buttonY != -1) {
-        if (dx <= consts::buttonWidth && dy <= consts::buttonWidth) {
+    float dx = reward_pos_x_t - b_x; 
+    float dy = reward_pos_y_t - b_y; 
+
+    if (!progress.pressedButton) {
+        // check to see if button is now pressed
+        if (ctx.get<ButtonState>(button).isPressed) {
             out_reward.v = consts::buttonReward;
-            progress.buttonX = -1; 
-            progress.buttonY = -1; 
+            progress.pressedButton = true;
         }
         else {
             float cur_dist = sqrtf(dx * dx + dy * dy);
             if (cur_dist >= progress.initialDist) {
+                // penalize for not making progress
                 out_reward.v = consts::slackReward;
             }
             else {
                 // exponentially less reward for being further away
-                out_reward.v = fmaxf(expf(-1.0f * cur_dist), 0.01f); 
+                out_reward.v = fminf(expf(-1.0f * cur_dist), 0.01f); 
             }
         }
     }
     else {
-        // reward for maximizing y 
         float new_progress_y = reward_pos_y - progress.maxY;
         if (new_progress_y > 0) {
+            // reward for maximizing y 
             out_reward.v = new_progress_y * consts::rewardPerDist;
             progress.maxY = reward_pos_y;
         }
         else {
+            // penalize for not making progress
             out_reward.v = consts::slackReward;
         }
     }
