@@ -621,11 +621,16 @@ inline void rewardSystem(Engine &ctx,
 }
 
 inline void doorRewardSystem(Engine &ctx,
-                            const DoorProperties &props,
+                            Progress &progress,
                             Reward &reward)
 {
     // count how many buttons are pressed
     int32_t num_pressed = 0;
+    int     current_rm  = progress.cur_room_idx;
+
+    LevelState &level = ctx.singleton<LevelState>();
+    DoorProperties props = ctx.get<DoorProperties>(level.rooms[current_rm].door);
+
     for (int32_t i = 0; i < props.numButtons; i++) {
         Entity button = props.buttons[i];
         ButtonState button_state = ctx.get<ButtonState>(button);
@@ -637,6 +642,7 @@ inline void doorRewardSystem(Engine &ctx,
     // give reward if all buttons are pressed
     if (num_pressed == props.numButtons) {
         reward.v += consts::rewardPerAllButtons;
+        printf("rewarded for all buttons\n");
     }
 }
 
@@ -781,24 +787,24 @@ void Sim::setupTasks(TaskGraphBuilder &builder, const Config &cfg)
     
     auto door_reward_sys = builder.addToGraph<ParallelForNode<Engine,
          doorRewardSystem,
-            DoorProperties,
+            Progress,
             Reward
         >>({reward_sys});
 
     // Assign partner's reward
-    // auto bonus_reward_sys = builder.addToGraph<ParallelForNode<Engine,
-    //      bonusRewardSystem,
-    //         OtherAgents,
-    //         Progress,
-    //         Reward
-    //     >>({door_reward_sys});
+    auto bonus_reward_sys = builder.addToGraph<ParallelForNode<Engine,
+         bonusRewardSystem,
+            OtherAgents,
+            Progress,
+            Reward
+        >>({door_reward_sys});
 
     // Check if the episode is over
     auto done_sys = builder.addToGraph<ParallelForNode<Engine,
         stepTrackerSystem,
             StepsRemaining,
             Done
-        >>({door_reward_sys});
+        >>({bonus_reward_sys});
 
     // Conditionally reset the world if the episode is over
     auto reset_sys = builder.addToGraph<ParallelForNode<Engine,
