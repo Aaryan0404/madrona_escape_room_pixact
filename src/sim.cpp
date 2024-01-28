@@ -513,8 +513,9 @@ inline void resetProgressSystem(Engine &ctx,
         float dx = agent_x - b_x;
         float dy = agent_y - b_y;
 
-        progress.initialDist = sqrtf(dx * dx + dy * dy);
-        progress.pressedButton = false;
+        progress.initialDist       = sqrtf(dx * dx + dy * dy);
+        progress.pressedButton     = false;
+        progress.pressedAllButtons = false;
     }
 }
 
@@ -576,48 +577,6 @@ inline void rewardSystem(Engine &ctx,
             out_reward.v = consts::slackReward;
         }
     }
-
-    // float reward; 
-    // if (progress.buttonX < 0 && progress.buttonY < 0) {
-    //     // get reward for maximizing y
-    //     float old_max_y = progress.maxY;
-    //     float new_progress = reward_pos_y - old_max_y;
-
-    //     // reward = (new_progress > 0) ? new_progress * consts::rewardPerDist : consts::slackReward;
-    //     reward = (new_progress > 0) ? new_progress * consts::rewardPerDist : 0;
-    // }
-    // else {
-    //     // get reward for minimizing distance to button
-    //     float dx = reward_pos_x - progress.buttonX;
-    //     float dy = reward_pos_y - progress.buttonY;
-
-    //     // abs value of dx and dy
-    //     dx = (dx < 0) ? -dx : dx;
-    //     dy = (dy < 0) ? -dy : dy;
-
-    //     // unless the button is now pressed
-    //     if (dx <= 1.15f && dy <= 1.15f) {
-    //         reward = consts::buttonReward;
-    //         progress.buttonX = -1;
-    //         progress.buttonY = -1;
-    //     }
-
-    //     // otherwise, just get reward for minimizing distance
-    //     else {
-    //         float cur_dist = sqrtf(dx * dx + dy * dy);
-    //         float new_progress = progress.bestDistance - cur_dist;
-
-    //         if (new_progress > 0) {
-    //             reward = new_progress * consts::rewardPerDist;
-    //             progress.bestDistance = cur_dist;
-    //         } 
-    //         else {
-    //             reward = consts::slackReward;
-    //         }
-    //     }
-    // }
-
-    // out_reward.v = reward;
 }
 
 inline void doorRewardSystem(Engine &ctx,
@@ -640,9 +599,9 @@ inline void doorRewardSystem(Engine &ctx,
     }
 
     // give reward if all buttons are pressed
-    if (num_pressed == props.numButtons) {
+    if (!progress.pressedAllButtons && num_pressed == props.numButtons) {
         reward.v += consts::rewardPerAllButtons;
-        printf("rewarded for all buttons\n");
+        progress.pressedAllButtons = true;
     }
 }
 

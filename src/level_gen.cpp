@@ -511,6 +511,7 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
 
             ctx.get<Progress>(agent_entity).initialDist   = sqrt(dx * dx + dy * dy);
             ctx.get<Progress>(agent_entity).pressedButton = false; 
+            ctx.get<Progress>(agent_entity).pressedAllButtons = false;
             ctx.get<Progress>(agent_entity).cur_room_idx  = 0;
         }
     }
