@@ -133,8 +133,9 @@ struct StepsRemaining {
 struct Progress {
     float initialDist;
     float maxY;
-    float buttonX;
-    float buttonY;
+    int button_id; 
+    bool pressedButton;
+    
     int agent_id;
 };
 

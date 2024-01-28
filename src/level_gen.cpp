@@ -445,10 +445,13 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
     room.entities[0] = a;
     room.entities[1] = b;
 
-    float left_button_x; 
+    float left_button_x;
     float left_button_y;
     float right_button_x;
     float right_button_y;
+
+    int left_button_id; 
+    int right_button_id; 
 
     // only for the first room
     if (y_min == 0) {
@@ -457,12 +460,18 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
             left_button_y = a_y;
             right_button_x = b_x;
             right_button_y = b_y;
+
+            left_button_id = 0; 
+            right_button_id = 1; 
         } 
         else {
             left_button_x = b_x;
             left_button_y = b_y;
             right_button_x = a_x;
             right_button_y = a_y;
+
+            left_button_id = 1;
+            right_button_id = 0;
         }
 
         // add coords of these buttons to progres component of agents
@@ -475,22 +484,25 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
             // agent x, y
             float pos_x = ctx.get<Position>(agent_entity).x;
             float pos_y = ctx.get<Position>(agent_entity).y;
+            
             float dx, dy; 
-
             if (pos_x < 0) {
-                ctx.get<Progress>(agent_entity).buttonX = left_button_x;
-                ctx.get<Progress>(agent_entity).buttonY = left_button_y;
+                // ctx.get<Progress>(agent_entity).buttonX = left_button_x;
+                // ctx.get<Progress>(agent_entity).buttonY = left_button_y;
+                ctx.get<Progress>(agent_entity).button_id  = left_button_id; 
                 dx = pos_x - left_button_x;
                 dy = pos_y - left_button_y;
             } 
             else {
-                ctx.get<Progress>(agent_entity).buttonX = right_button_x;
-                ctx.get<Progress>(agent_entity).buttonY = right_button_y;
+                // ctx.get<Progress>(agent_entity).buttonX = right_button_x;
+                // ctx.get<Progress>(agent_entity).buttonY = right_button_y;
+                ctx.get<Progress>(agent_entity).button_id  = right_button_id;
                 dx = pos_x - right_button_x;
                 dy = pos_y - right_button_y;
             }
 
-            ctx.get<Progress>(agent_entity).initialDist = sqrt(dx * dx + dy * dy);
+            ctx.get<Progress>(agent_entity).initialDist   = sqrt(dx * dx + dy * dy);
+            ctx.get<Progress>(agent_entity).pressedButton = false; 
         }
     }
 
