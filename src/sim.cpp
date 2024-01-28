@@ -486,6 +486,38 @@ inline void lidarSystem(Engine &ctx,
 #endif
 }
 
+inline void resetProgressSystem(Engine &ctx,
+                                Position pos,
+                                Progress &progress)
+{
+    float maxY   = progress.maxY;
+    int room_idx = maxY / (consts::roomLength * 1.025f);
+
+    if (room_idx > progress.cur_room_idx) {
+        progress.cur_room_idx = room_idx;
+
+        Entity button = ctx.singleton<LevelState>().rooms[room_idx].entities[progress.button_id];
+
+        float b_x = ctx.get<Position>(button).x;
+        float b_y = ctx.get<Position>(button).y;
+
+        float agent_y = fminf(pos.y, consts::worldLength * 2);
+        float agent_x; 
+        if (pos.x < 0) {
+            agent_x = fmaxf(pos.x, -consts::worldWidth);
+        }
+        else {
+            agent_x = fminf(pos.x, consts::worldWidth);
+        }
+
+        float dx = agent_x - b_x;
+        float dy = agent_y - b_y;
+
+        progress.initialDist = sqrtf(dx * dx + dy * dy);
+        progress.pressedButton = false;
+    }
+}
+
 // Computes reward for each agent and keeps track of the max distance achieved
 // so far through the challenge. Continuous reward is provided for any new
 // distance achieved.
@@ -503,8 +535,7 @@ inline void rewardSystem(Engine &ctx,
         reward_pos_x = fminf(pos.x, consts::worldWidth);
     }
 
-    // int room_idx = progress.maxY / (consts::roomLength * 1.025f);
-    int room_idx = 0; 
+    int room_idx = progress.maxY / (consts::roomLength * 1.025f);
 
     LevelState &level = ctx.singleton<LevelState>();
     Entity button = level.rooms[room_idx].entities[progress.button_id];
@@ -734,13 +765,19 @@ void Sim::setupTasks(TaskGraphBuilder &builder, const Config &cfg)
             DoorProperties
         >>({button_sys});
 
+    auto reset_progress_sys = builder.addToGraph<ParallelForNode<Engine,
+        resetProgressSystem,
+            Position,
+            Progress
+        >>({door_open_sys});
+
     // Compute initial reward now that physics has updated the world state
     auto reward_sys = builder.addToGraph<ParallelForNode<Engine,
          rewardSystem,
             Position,
             Progress,
             Reward
-        >>({door_open_sys});
+        >>({reset_progress_sys});
     
     auto door_reward_sys = builder.addToGraph<ParallelForNode<Engine,
          doorRewardSystem,

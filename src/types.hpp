@@ -135,6 +135,7 @@ struct Progress {
     float maxY;
     int button_id; 
     bool pressedButton;
+    int cur_room_idx; 
     
     int agent_id;
 };
