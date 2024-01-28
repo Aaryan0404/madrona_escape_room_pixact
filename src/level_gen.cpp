@@ -445,6 +445,11 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
     room.entities[0] = a;
     room.entities[1] = b;
 
+    float left_button_x;
+    float left_button_y;
+    float right_button_x;
+    float right_button_y;
+
     int left_button_id; 
     int right_button_id; 
 

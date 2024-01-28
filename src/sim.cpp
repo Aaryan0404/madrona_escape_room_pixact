@@ -489,7 +489,7 @@ inline void lidarSystem(Engine &ctx,
 // Computes reward for each agent and keeps track of the max distance achieved
 // so far through the challenge. Continuous reward is provided for any new
 // distance achieved.
-inline void rewardSystem(Engine &,
+inline void rewardSystem(Engine &ctx,
                          Position pos,
                          Progress &progress,
                          Reward &out_reward)
@@ -512,8 +512,8 @@ inline void rewardSystem(Engine &,
     float b_x = ctx.get<Position>(button).x;
     float b_y = ctx.get<Position>(button).y;
 
-    float dx = reward_pos_x_t - b_x; 
-    float dy = reward_pos_y_t - b_y; 
+    float dx = reward_pos_x - b_x; 
+    float dy = reward_pos_y - b_y; 
 
     if (!progress.pressedButton) {
         // check to see if button is now pressed
