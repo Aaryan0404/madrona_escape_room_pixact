@@ -486,6 +486,39 @@ inline void lidarSystem(Engine &ctx,
 #endif
 }
 
+inline void resetProgressSystem(Engine &ctx,
+                                Position pos,
+                                Progress &progress)
+{
+    float maxY   = progress.maxY;
+    int room_idx = maxY / (consts::roomLength * 1.025f);
+
+    if (room_idx > progress.cur_room_idx) {
+        progress.cur_room_idx = room_idx;
+
+        Entity button = ctx.singleton<LevelState>().rooms[room_idx].entities[progress.button_id];
+
+        float b_x = ctx.get<Position>(button).x;
+        float b_y = ctx.get<Position>(button).y;
+
+        float agent_y = fminf(pos.y, consts::worldLength * 2);
+        float agent_x; 
+        if (pos.x < 0) {
+            agent_x = fmaxf(pos.x, -consts::worldWidth);
+        }
+        else {
+            agent_x = fminf(pos.x, consts::worldWidth);
+        }
+
+        float dx = agent_x - b_x;
+        float dy = agent_y - b_y;
+
+        progress.initialDist       = sqrtf(dx * dx + dy * dy);
+        progress.pressedButton     = false;
+        progress.pressedAllButtons = false;
+    }
+}
+
 // Computes reward for each agent and keeps track of the max distance achieved
 // so far through the challenge. Continuous reward is provided for any new
 // distance achieved.
@@ -503,8 +536,7 @@ inline void rewardSystem(Engine &ctx,
         reward_pos_x = fminf(pos.x, consts::worldWidth);
     }
 
-    // int room_idx = progress.maxY / (consts::roomLength * 1.025f);
-    int room_idx = 0; 
+    int room_idx = progress.maxY / (consts::roomLength * 1.025f);
 
     LevelState &level = ctx.singleton<LevelState>();
     Entity button = level.rooms[room_idx].entities[progress.button_id];
@@ -545,56 +577,19 @@ inline void rewardSystem(Engine &ctx,
             out_reward.v = consts::slackReward;
         }
     }
-
-    // float reward; 
-    // if (progress.buttonX < 0 && progress.buttonY < 0) {
-    //     // get reward for maximizing y
-    //     float old_max_y = progress.maxY;
-    //     float new_progress = reward_pos_y - old_max_y;
-
-    //     // reward = (new_progress > 0) ? new_progress * consts::rewardPerDist : consts::slackReward;
-    //     reward = (new_progress > 0) ? new_progress * consts::rewardPerDist : 0;
-    // }
-    // else {
-    //     // get reward for minimizing distance to button
-    //     float dx = reward_pos_x - progress.buttonX;
-    //     float dy = reward_pos_y - progress.buttonY;
-
-    //     // abs value of dx and dy
-    //     dx = (dx < 0) ? -dx : dx;
-    //     dy = (dy < 0) ? -dy : dy;
-
-    //     // unless the button is now pressed
-    //     if (dx <= 1.15f && dy <= 1.15f) {
-    //         reward = consts::buttonReward;
-    //         progress.buttonX = -1;
-    //         progress.buttonY = -1;
-    //     }
-
-    //     // otherwise, just get reward for minimizing distance
-    //     else {
-    //         float cur_dist = sqrtf(dx * dx + dy * dy);
-    //         float new_progress = progress.bestDistance - cur_dist;
-
-    //         if (new_progress > 0) {
-    //             reward = new_progress * consts::rewardPerDist;
-    //             progress.bestDistance = cur_dist;
-    //         } 
-    //         else {
-    //             reward = consts::slackReward;
-    //         }
-    //     }
-    // }
-
-    // out_reward.v = reward;
 }
 
 inline void doorRewardSystem(Engine &ctx,
-                            const DoorProperties &props,
+                            Progress &progress,
                             Reward &reward)
 {
     // count how many buttons are pressed
     int32_t num_pressed = 0;
+    int     current_rm  = progress.cur_room_idx;
+
+    LevelState &level = ctx.singleton<LevelState>();
+    DoorProperties props = ctx.get<DoorProperties>(level.rooms[current_rm].door);
+
     for (int32_t i = 0; i < props.numButtons; i++) {
         Entity button = props.buttons[i];
         ButtonState button_state = ctx.get<ButtonState>(button);
@@ -604,8 +599,9 @@ inline void doorRewardSystem(Engine &ctx,
     }
 
     // give reward if all buttons are pressed
-    if (num_pressed == props.numButtons) {
+    if (!progress.pressedAllButtons && num_pressed == props.numButtons) {
         reward.v += consts::rewardPerAllButtons;
+        progress.pressedAllButtons = true;
     }
 }
 
@@ -734,34 +730,40 @@ void Sim::setupTasks(TaskGraphBuilder &builder, const Config &cfg)
             DoorProperties
         >>({button_sys});
 
+    auto reset_progress_sys = builder.addToGraph<ParallelForNode<Engine,
+        resetProgressSystem,
+            Position,
+            Progress
+        >>({door_open_sys});
+
     // Compute initial reward now that physics has updated the world state
     auto reward_sys = builder.addToGraph<ParallelForNode<Engine,
          rewardSystem,
             Position,
             Progress,
             Reward
-        >>({door_open_sys});
+        >>({reset_progress_sys});
     
     auto door_reward_sys = builder.addToGraph<ParallelForNode<Engine,
          doorRewardSystem,
-            DoorProperties,
+            Progress,
             Reward
         >>({reward_sys});
 
     // Assign partner's reward
-    // auto bonus_reward_sys = builder.addToGraph<ParallelForNode<Engine,
-    //      bonusRewardSystem,
-    //         OtherAgents,
-    //         Progress,
-    //         Reward
-    //     >>({door_reward_sys});
+    auto bonus_reward_sys = builder.addToGraph<ParallelForNode<Engine,
+         bonusRewardSystem,
+            OtherAgents,
+            Progress,
+            Reward
+        >>({door_reward_sys});
 
     // Check if the episode is over
     auto done_sys = builder.addToGraph<ParallelForNode<Engine,
         stepTrackerSystem,
             StepsRemaining,
             Done
-        >>({door_reward_sys});
+        >>({bonus_reward_sys});
 
     // Conditionally reset the world if the episode is over
     auto reset_sys = builder.addToGraph<ParallelForNode<Engine,

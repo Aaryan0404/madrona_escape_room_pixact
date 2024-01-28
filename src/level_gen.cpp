@@ -455,24 +455,32 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
 
     // only for the first room
     if (y_min == 0) {
-        if (a_x < b_x) {
-            left_button_x = a_x;
-            left_button_y = a_y;
-            right_button_x = b_x;
-            right_button_y = b_y;
+        left_button_x = a_x;
+        left_button_y = a_y;
+        right_button_x = b_x;
+        right_button_y = b_y;
 
-            left_button_id = 0; 
-            right_button_id = 1; 
-        } 
-        else {
-            left_button_x = b_x;
-            left_button_y = b_y;
-            right_button_x = a_x;
-            right_button_y = a_y;
+        left_button_id = 0;
+        right_button_id = 1;
+        
+        // if (a_x < b_x) {
+        //     left_button_x = a_x;
+        //     left_button_y = a_y;
+        //     right_button_x = b_x;
+        //     right_button_y = b_y;
 
-            left_button_id = 1;
-            right_button_id = 0;
-        }
+        //     left_button_id = 0; 
+        //     right_button_id = 1; 
+        // } 
+        // else {
+        //     left_button_x = b_x;
+        //     left_button_y = b_y;
+        //     right_button_x = a_x;
+        //     right_button_y = a_y;
+
+        //     left_button_id = 1;
+        //     right_button_id = 0;
+        // }
 
         // add coords of these buttons to progres component of agents
         for (CountT i = 0; i < consts::numAgents; i++) {
@@ -503,6 +511,8 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
 
             ctx.get<Progress>(agent_entity).initialDist   = sqrt(dx * dx + dy * dy);
             ctx.get<Progress>(agent_entity).pressedButton = false; 
+            ctx.get<Progress>(agent_entity).pressedAllButtons = false;
+            ctx.get<Progress>(agent_entity).cur_room_idx  = 0;
         }
     }
 
