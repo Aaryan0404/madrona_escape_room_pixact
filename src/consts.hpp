@@ -32,7 +32,7 @@ inline constexpr float rewardPerDist = 0.08f;
 inline constexpr float doorReward = 0.1f;
 
 // Max reward for being on button
-inline constexpr float buttonReward = 0.05f;
+inline constexpr float buttonReward = 0.075f;
 
 // Each step that the agents don't make additional progress they get a small
 // penalty reward (progress towards button or in y direction)

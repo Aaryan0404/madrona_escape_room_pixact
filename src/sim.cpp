@@ -563,7 +563,7 @@ inline void rewardSystem(Engine &ctx,
             }
             else {
                 // exponentially less reward for being further away
-                out_reward.v = fminf(expf(-1.0f * (cur_dist + 2.75f)), consts::buttonReward); 
+                out_reward.v = fminf(expf(-1.0f * (cur_dist + 2.25f)), consts::buttonReward); 
             }
         }
     }
