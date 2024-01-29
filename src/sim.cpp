@@ -561,8 +561,7 @@ inline void rewardSystem(Engine &ctx,
             }
             else {
                 // exponentially less reward for being further away
-                // 1.596 calculated to give 0.05 reward when cur_dist = 1.4
-                out_reward.v = fminf(expf(-1.0f * (cur_dist + 1.596f)), 0.05f); 
+                out_reward.v = fminf(expf(-1.0f * (cur_dist + 2.5f)), 0.05f); 
             }
         }
     }
