@@ -15,6 +15,8 @@ from madrona_escape_room_learn.rnn import LSTM
 import math
 import torch
 
+import cv2
+
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -59,7 +61,22 @@ def setup_obs(sim, raw_pixels=False):
         return obs_tensors, num_obs_features
         
     else:
-        rgb_tensor = rgb_tensor[:, :, :, :, 0:3]
+        rgb_tensor = rgb_tensor[:, :, :, :, :]
+
+        # # take first three elems of batch
+        # input_1_a1 = rgb_tensor[0, 0, :, :, :]
+        # input_1_a2 = rgb_tensor[0, 1, :, :, :]
+
+        # # input_1_a1 = torch.concatenate([input_1_a1, depth_tensor[0, 0, :, :, :]], dim=-1)
+        # # input_1_a2 = torch.concatenate([input_1_a2, depth_tensor[0, 1, :, :, :]], dim=-1)
+
+        # # move to cpu
+        # input_1_a1 = input_1_a1.cpu().numpy()
+        # input_1_a2 = input_1_a2.cpu().numpy()
+
+        # # convert to images
+        # cv2.imwrite('input_1_a1.png', input_1_a1)
+        # cv2.imwrite('input_1_a2.png', input_1_a2)
 
         # depth_tensor = depth_tensor[:, :, :, :, 0:1]
 
@@ -77,12 +94,17 @@ def setup_obs(sim, raw_pixels=False):
         #     depth_tensor.view(batch_size, *depth_tensor.shape[1:]),    
         # ]
 
+        # obs_tensors = [
+        #     rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),         
+        #     depth_tensor.view(batch_size, *depth_tensor.shape[2:]),    
+        # ]
+
         obs_tensors = [
-            rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),         
-            depth_tensor.view(batch_size, *depth_tensor.shape[2:]),    
+            rgb_tensor.view(batch_size, *rgb_tensor.shape[2:])
         ]
 
-        num_channels = rgb_tensor.shape[-1] + depth_tensor.shape[-1]
+        # num_channels = rgb_tensor.shape[-1] + depth_tensor.shape[-1]
+        num_channels = rgb_tensor.shape[-1]
         
         return obs_tensors, num_channels
 
@@ -113,7 +135,15 @@ def process_obs(self_obs, partner_obs, room_ent_obs,
         ids,
     ], dim=1)
 
-def process_pixels(rgb, depth):
+def process_pixels(rgb):
+    assert(not torch.isnan(rgb).any())
+    assert(not torch.isinf(rgb).any())
+
+    CNN_input = rgb
+
+    return CNN_input.to(torch.float16)
+
+def process_pixels_o(rgb, depth):
     assert(not torch.isnan(rgb).any())
     assert(not torch.isinf(rgb).any())
 
