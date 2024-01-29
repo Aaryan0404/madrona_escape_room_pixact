@@ -126,6 +126,7 @@ ckpt_dir.mkdir(exist_ok=True, parents=True)
 obs, dim_info = setup_obs(sim, args.rawPixels) # if rawPixels, dim_info = 4 (# of channels, rgbd), else dim_info = 94 (# of features)
 policy = make_policy(dim_info, args.num_channels, args.separate_value, args.rawPixels)
 
+# breakpoint()
 actions = sim.action_tensor().to_torch()
 dones = sim.done_tensor().to_torch()
 rewards = sim.reward_tensor().to_torch()

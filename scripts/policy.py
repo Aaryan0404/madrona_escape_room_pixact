@@ -60,14 +60,23 @@ def setup_obs(sim, raw_pixels=False):
         
     else:
         rgb_tensor = rgb_tensor[:, :, :, :, 0:3]
-
+        permuted_rgb = rgb_tensor.permute(0, 2, 3, 4, 1)
+        permuted_depth = depth_tensor.permute(0, 2, 3, 4, 1)
+        reshaped_rgb = permuted_rgb.reshape(rgb_tensor.size(0), rgb_tensor.size(2), rgb_tensor.size(3), -1)
+        reshaped_depth = permuted_depth.reshape(depth_tensor.size(0), depth_tensor.size(2), depth_tensor.size(3), -1)
+        rgb_tensor = torch.cat((reshaped_rgb, reshaped_rgb), dim=0)
+        depth_tensor = torch.cat((reshaped_depth, reshaped_depth), dim=0)
         # raw pixels
         obs_tensors = [
-            rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),         
-            depth_tensor.view(batch_size, *depth_tensor.shape[2:]),    
+            rgb_tensor,
+            depth_tensor,
         ]
+        # obs_tensors = [
+        #     rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),
+        #     depth_tensor.view(batch_size, *depth_tensor.shape[2:]),
+        # ]
 
-        num_channels = rgb_tensor.shape[-1] + depth_tensor.shape[-1]
+        num_channels = reshaped_rgb.shape[-1] + reshaped_depth.shape[-1]
         
         return obs_tensors, num_channels
 
@@ -132,7 +141,7 @@ def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
         # )
         
         encoder = RecurrentBackboneEncoder(
-            net = CNN(in_channels = dim_info * 4),
+            net = CNN(in_channels = dim_info),
             rnn = LSTM(in_channels = num_channels,
                        hidden_channels = num_channels,
                        num_layers = 1)
