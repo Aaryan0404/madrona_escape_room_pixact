@@ -61,7 +61,8 @@ def setup_obs(sim, raw_pixels=False):
         return obs_tensors, num_obs_features
         
     else:
-        rgb_tensor = rgb_tensor[:, :, :, :, :]
+        rgb_tensor = rgb_tensor[:, :, :, :, 0:3]
+        depth_tensor = depth_tensor[:, :, :, :, 0:1]
 
         # # take first three elems of batch
         # input_1_a1 = rgb_tensor[0, 0, :, :, :]
@@ -88,23 +89,12 @@ def setup_obs(sim, raw_pixels=False):
         # rgb_tensor = rgb_tensor.permute(0, 2, 3, 1, 4).reshape(batch_size, W, H, 3 * N)
         # depth_tensor = depth_tensor.permute(0, 2, 3, 1, 4).reshape(batch_size, W, H, 1 * N)
 
-        # # raw pixels
-        # obs_tensors = [
-        #     rgb_tensor.view(batch_size, *rgb_tensor.shape[1:]),         
-        #     depth_tensor.view(batch_size, *depth_tensor.shape[1:]),    
-        # ]
-
-        # obs_tensors = [
-        #     rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),         
-        #     depth_tensor.view(batch_size, *depth_tensor.shape[2:]),    
-        # ]
-
         obs_tensors = [
-            rgb_tensor.view(batch_size, *rgb_tensor.shape[2:])
+            rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),         
+            depth_tensor.view(batch_size, *depth_tensor.shape[2:]),    
         ]
 
-        # num_channels = rgb_tensor.shape[-1] + depth_tensor.shape[-1]
-        num_channels = rgb_tensor.shape[-1]
+        num_channels = rgb_tensor.shape[-1] + depth_tensor.shape[-1]
         
         return obs_tensors, num_channels
 
@@ -135,15 +125,7 @@ def process_obs(self_obs, partner_obs, room_ent_obs,
         ids,
     ], dim=1)
 
-def process_pixels(rgb):
-    assert(not torch.isnan(rgb).any())
-    assert(not torch.isinf(rgb).any())
-
-    CNN_input = rgb
-
-    return CNN_input.to(torch.float16)
-
-def process_pixels_o(rgb, depth):
+def process_pixels(rgb, depth):
     assert(not torch.isnan(rgb).any())
     assert(not torch.isinf(rgb).any())
 
@@ -154,9 +136,12 @@ def process_pixels_o(rgb, depth):
     assert(not torch.isnan(depth).any())
     assert(not torch.isinf(depth).any())
 
-    # get width and height
-    width = rgb.shape[1]
-    height = rgb.shape[2]
+    # convert rgb to float
+    rgb = rgb.to(torch.float16)
+    # normal rgb values (3 channels in last dim of rgb tensor) are 0-255, so divide by 255
+    rgb = rgb[:, :, :, 0:3] / 255
+
+    # potentially normalize depth as well? 
 
     CNN_input = torch.cat([rgb, depth], dim=-1) # shape = B (N * A), W, H, C
     # CNN_input = CNN_input.reshape(rgb.shape[0], width//2, 2, height//2, 2, rgb.shape[-1] + depth.shape[-1])
