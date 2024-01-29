@@ -514,8 +514,7 @@ inline void resetProgressSystem(Engine &ctx,
         float dy = agent_y - b_y;
 
         progress.initialDist       = sqrtf(dx * dx + dy * dy);
-        progress.pressedButton     = false;
-        progress.pressedAllButtons = false;
+        progress.openedDoor        = false;
     }
 }
 
@@ -547,11 +546,14 @@ inline void rewardSystem(Engine &ctx,
     float dx = reward_pos_x - b_x; 
     float dy = reward_pos_y - b_y; 
 
-    if (!progress.pressedButton) {
-        // check to see if button is now pressed
-        if (ctx.get<ButtonState>(button).isPressed) {
-            out_reward.v = consts::buttonReward;
-            progress.pressedButton = true;
+    // check to see if the door is now open
+    if (!progress.openedDoor) {
+         Entity cur_door = level.rooms[room_idx].door;
+         OpenState door_open_state = ctx.get<OpenState>(cur_door);
+    
+        if (door_open_state.isOpen) {
+            out_reward.v = consts::doorReward;
+            progress.openedDoor = true;
         }
         else {
             float cur_dist = sqrtf(dx * dx + dy * dy);
@@ -561,7 +563,7 @@ inline void rewardSystem(Engine &ctx,
             }
             else {
                 // exponentially less reward for being further away
-                out_reward.v = fminf(expf(-1.0f * (cur_dist + 2.75f)), 0.05f); 
+                out_reward.v = fminf(expf(-1.0f * (cur_dist + 2.75f)), consts::buttonReward); 
             }
         }
     }
@@ -576,32 +578,6 @@ inline void rewardSystem(Engine &ctx,
             // penalize for not making progress
             out_reward.v = consts::slackReward;
         }
-    }
-}
-
-inline void doorRewardSystem(Engine &ctx,
-                            Progress &progress,
-                            Reward &reward)
-{
-    // count how many buttons are pressed
-    int32_t num_pressed = 0;
-    int     current_rm  = progress.cur_room_idx;
-
-    LevelState &level = ctx.singleton<LevelState>();
-    DoorProperties props = ctx.get<DoorProperties>(level.rooms[current_rm].door);
-
-    for (int32_t i = 0; i < props.numButtons; i++) {
-        Entity button = props.buttons[i];
-        ButtonState button_state = ctx.get<ButtonState>(button);
-        if (button_state.isPressed) {
-            num_pressed++;
-        }
-    }
-
-    // give reward if all buttons are pressed
-    if (!progress.pressedAllButtons && num_pressed == props.numButtons) {
-        reward.v += consts::rewardPerAllButtons;
-        progress.pressedAllButtons = true;
     }
 }
 
@@ -743,12 +719,6 @@ void Sim::setupTasks(TaskGraphBuilder &builder, const Config &cfg)
             Progress,
             Reward
         >>({reset_progress_sys});
-    
-    auto door_reward_sys = builder.addToGraph<ParallelForNode<Engine,
-         doorRewardSystem,
-            Progress,
-            Reward
-        >>({reward_sys});
 
     // Assign partner's reward
     // auto bonus_reward_sys = builder.addToGraph<ParallelForNode<Engine,
@@ -763,7 +733,7 @@ void Sim::setupTasks(TaskGraphBuilder &builder, const Config &cfg)
         stepTrackerSystem,
             StepsRemaining,
             Done
-        >>({door_reward_sys});
+        >>({reward_sys});
 
     // Conditionally reset the world if the episode is over
     auto reset_sys = builder.addToGraph<ParallelForNode<Engine,

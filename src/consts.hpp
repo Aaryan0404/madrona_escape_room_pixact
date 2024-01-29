@@ -28,10 +28,11 @@ inline constexpr float roomLength = worldLength / numRooms;
 // Each unit of distance forward (+ y axis) rewards the agents by this amount
 inline constexpr float rewardPerDist = 0.08f;
 
-// Reward for button press
-inline constexpr float buttonReward = 0.075f; 
-// Reward for pressing all buttons
-inline constexpr float rewardPerAllButtons = 0.1f;
+// Reward for opening a door
+inline constexpr float doorReward = 0.1f;
+
+// Max reward for being on button
+inline constexpr float buttonReward = 0.05f;
 
 // Each step that the agents don't make additional progress they get a small
 // penalty reward (progress towards button or in y direction)

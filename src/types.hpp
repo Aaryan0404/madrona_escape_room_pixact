@@ -135,12 +135,9 @@ struct Progress {
     float maxY;
 
     int button_id; 
-    bool pressedButton;
-    bool pressedAllButtons;
+    bool openedDoor;
 
-    int cur_room_idx; 
-    
-    int agent_id;
+    int cur_room_idx;
 };
 
 // Per-agent component storing Entity IDs of the other agents. Used to

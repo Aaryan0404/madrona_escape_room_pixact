@@ -227,7 +227,6 @@ static void resetPersistentEntities(Engine &ctx)
              ctx.destroyEntity(grab_state.constraintEntity);
              grab_state.constraintEntity = Entity::none();
          }
-         ctx.get<Progress>(agent_entity).agent_id = i;
 
          ctx.get<Velocity>(agent_entity) = {
              Vector3::zero(),
@@ -486,9 +485,6 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
         for (CountT i = 0; i < consts::numAgents; i++) {
             Entity agent_entity = ctx.data().agents[i];
 
-            // maybe we don't need this
-            int agent_id = ctx.get<Progress>(agent_entity).agent_id;
-
             // agent x, y
             float pos_x = ctx.get<Position>(agent_entity).x;
             float pos_y = ctx.get<Position>(agent_entity).y;
@@ -510,8 +506,7 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
             }
 
             ctx.get<Progress>(agent_entity).initialDist   = sqrt(dx * dx + dy * dy);
-            ctx.get<Progress>(agent_entity).pressedButton = false; 
-            ctx.get<Progress>(agent_entity).pressedAllButtons = false;
+            ctx.get<Progress>(agent_entity).openedDoor = false;
             ctx.get<Progress>(agent_entity).cur_room_idx  = 0;
         }
     }
