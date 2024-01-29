@@ -86,9 +86,14 @@ arg_parser.add_argument('--num-bptt-chunks', type=int, default=4)
 
 arg_parser.add_argument('--lr', type=float, default=1e-5)
 arg_parser.add_argument('--gamma', type=float, default=0.998)
-arg_parser.add_argument('--entropy-loss-coef', type=float, default=0.01)
+arg_parser.add_argument('--entropy-loss-coef', type=float, default=0.001)
 arg_parser.add_argument('--value-loss-coef', type=float, default=0.5)
 arg_parser.add_argument('--clip-value-loss', action='store_true')
+
+# experimemnts:
+# do not sqiuish W and H by 2 - not sig progress (but agents moving to wall)
+# do not collapse N and A into batch size - ask brennan
+# decrease entroply loss by factor of 10
 
 arg_parser.add_argument('--num-channels', type=int, default=256)
 arg_parser.add_argument('--separate-value', action='store_true')

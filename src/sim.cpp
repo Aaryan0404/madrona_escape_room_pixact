@@ -561,7 +561,8 @@ inline void rewardSystem(Engine &ctx,
             }
             else {
                 // exponentially less reward for being further away
-                out_reward.v = fminf(expf(-1.0f * cur_dist), 0.01f); 
+                // 1.596 calculated to give 0.05 reward when cur_dist = 1.4
+                out_reward.v = fminf(expf(-1.0f * (cur_dist + 1.596f)), 0.05f); 
             }
         }
     }
@@ -751,19 +752,19 @@ void Sim::setupTasks(TaskGraphBuilder &builder, const Config &cfg)
         >>({reward_sys});
 
     // Assign partner's reward
-    auto bonus_reward_sys = builder.addToGraph<ParallelForNode<Engine,
-         bonusRewardSystem,
-            OtherAgents,
-            Progress,
-            Reward
-        >>({door_reward_sys});
+    // auto bonus_reward_sys = builder.addToGraph<ParallelForNode<Engine,
+    //      bonusRewardSystem,
+    //         OtherAgents,
+    //         Progress,
+    //         Reward
+    //     >>({door_reward_sys});
 
     // Check if the episode is over
     auto done_sys = builder.addToGraph<ParallelForNode<Engine,
         stepTrackerSystem,
             StepsRemaining,
             Done
-        >>({bonus_reward_sys});
+        >>({door_reward_sys});
 
     // Conditionally reset the world if the episode is over
     auto reset_sys = builder.addToGraph<ParallelForNode<Engine,

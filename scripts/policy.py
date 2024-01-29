@@ -15,6 +15,8 @@ from madrona_escape_room_learn.rnn import LSTM
 import math
 import torch
 
+import cv2
+
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -60,8 +62,33 @@ def setup_obs(sim, raw_pixels=False):
         
     else:
         rgb_tensor = rgb_tensor[:, :, :, :, 0:3]
+        depth_tensor = depth_tensor[:, :, :, :, 0:1]
 
-        # raw pixels
+        # # take first three elems of batch
+        # input_1_a1 = rgb_tensor[0, 0, :, :, :]
+        # input_1_a2 = rgb_tensor[0, 1, :, :, :]
+
+        # # input_1_a1 = torch.concatenate([input_1_a1, depth_tensor[0, 0, :, :, :]], dim=-1)
+        # # input_1_a2 = torch.concatenate([input_1_a2, depth_tensor[0, 1, :, :, :]], dim=-1)
+
+        # # move to cpu
+        # input_1_a1 = input_1_a1.cpu().numpy()
+        # input_1_a2 = input_1_a2.cpu().numpy()
+
+        # # convert to images
+        # cv2.imwrite('input_1_a1.png', input_1_a1)
+        # cv2.imwrite('input_1_a2.png', input_1_a2)
+
+        # depth_tensor = depth_tensor[:, :, :, :, 0:1]
+
+        # N = rgb_tensor.shape[1]
+        # batch_size = rgb_tensor.shape[0]
+
+        # W, H = rgb_tensor.shape[2:4]
+
+        # rgb_tensor = rgb_tensor.permute(0, 2, 3, 1, 4).reshape(batch_size, W, H, 3 * N)
+        # depth_tensor = depth_tensor.permute(0, 2, 3, 1, 4).reshape(batch_size, W, H, 1 * N)
+
         obs_tensors = [
             rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),         
             depth_tensor.view(batch_size, *depth_tensor.shape[2:]),    
@@ -109,9 +136,12 @@ def process_pixels(rgb, depth):
     assert(not torch.isnan(depth).any())
     assert(not torch.isinf(depth).any())
 
-    # get width and height
-    width = rgb.shape[1]
-    height = rgb.shape[2]
+    # convert rgb to float
+    rgb = rgb.to(torch.float16)
+    # normal rgb values (3 channels in last dim of rgb tensor) are 0-255, so divide by 255
+    rgb = rgb[:, :, :, 0:3] / 255
+
+    # potentially normalize depth as well? 
 
     CNN_input = torch.cat([rgb, depth], dim=-1) # shape = B (N * A), W, H, C
     # CNN_input = CNN_input.reshape(rgb.shape[0], width//2, 2, height//2, 2, rgb.shape[-1] + depth.shape[-1])
@@ -132,7 +162,7 @@ def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
         # )
         
         encoder = RecurrentBackboneEncoder(
-            net = CNN(in_channels = dim_info * 4),
+            net = CNN(in_channels = dim_info),
             rnn = LSTM(in_channels = num_channels,
                        hidden_channels = num_channels,
                        num_layers = 1)
