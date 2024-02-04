@@ -7,6 +7,7 @@ from .cfg import SimInterface
 from .actor_critic import ActorCritic, RecurrentStateConfig
 from .profile import profile
 from .moving_avg import EMANormalizer
+import wandb
 
 @dataclass(frozen = True)
 class Rollouts:
@@ -85,8 +86,6 @@ class RolloutManager:
         self.rnn_start_states = []
         for rnn_state_shape in recurrent_cfg.shapes:
             # expand shape to batch size
-
-            # comback
             batched_state_shape = (*rnn_state_shape[0:2],
                 sim.actions.shape[0], rnn_state_shape[2])
 
@@ -107,7 +106,7 @@ class RolloutManager:
         self.rnn_end_states = tuple(self.rnn_end_states)
         self.rnn_alt_states = tuple(self.rnn_alt_states)
         self.rnn_start_states = tuple(self.rnn_start_states)
-
+        self.prev = None
     def collect(
             self,
             amp : AMPState,
@@ -117,14 +116,13 @@ class RolloutManager:
         ):
         rnn_states_cur_in = self.rnn_end_states
         rnn_states_cur_out = self.rnn_alt_states
-
         for bptt_chunk in range(0, self.num_bptt_chunks):
             with profile("Cache RNN state"):
                 # Cache starting RNN state for this chunk
                 for start_state, end_state in zip(
                         self.rnn_start_states, rnn_states_cur_in):
                     start_state[bptt_chunk].copy_(end_state)
-
+            rgbs = []
             for slot in range(0, self.num_bptt_steps):
                 cur_obs_buffers = [obs[bptt_chunk, slot] for obs in self.obs]
 
@@ -157,10 +155,16 @@ class RolloutManager:
 
                     # For now, the Policy Infer profile block ends here to get
                     # a CPU synchronization
+                    cur_actions_store = torch.tensor([[0,0,1,0],[0, 0, 1, 0]]).cuda() 
                     sim.actions.copy_(cur_actions_store)
-
+                # always_rotate_clockwise = torch.tensor([[0,0,1,0],[0, 0, 1, 0]]).cuda()
+                # sim.actions.copy_(always_rotate_clockwise)
+                # breakpoint()
+                # initial_obs  = sim.obs[0][0].clone()
                 with profile('Simulator Step'):
-                    sim.step()
+                    for _ in range(29):
+                        sim.step()
+                    # breakpoint()
 
                 with profile('Post Step Copy'):
                     self.rewards[bptt_chunk, slot].copy_(
@@ -174,6 +178,17 @@ class RolloutManager:
                         rnn_states.masked_fill_(cur_dones_store, 0)
 
                 profile.gpu_measure(sync=True)
+                # add obs to frames buffer
+                # NOTE: Uncomment when using --rawPixels
+                # rgbs.append(sim.obs[0])
+
+            # NOTE: Uncomment to see the constant frames in wandb (LEAVE THIS COMMENTED IF NOT USING --rawPixels)
+            # frames = torch.stack(rgbs, dim=0)
+            # frames = frames.permute(0, 1, 4, 2, 3)
+
+            # wandb.log({"agent_1": wandb.Video(frames[:, 0].cpu(), fps=2)})
+            # wandb.log({"agent_2": wandb.Video(frames[:, 1].cpu(), fps=2)})
+            
 
         if self.need_obs_copy:
             final_obs = self.final_obs
@@ -195,7 +210,10 @@ class RolloutManager:
         # Right now this just returns the rollout manager's pointers,
         # but in the future could return only one set of buffers from a
         # double buffered store, etc
-
+        
+        # NOTE: THIS ASSERTION SHOULD PASS FOR NON-PIXEL OBS, BUT FAIL FOR PIXEL-OBS
+        assert(torch.sum(self.obs[0]) != torch.sum(self.prev))
+        self.prev = self.obs[0].clone()
         return Rollouts(
             obs = self.obs,
             actions = self.actions,

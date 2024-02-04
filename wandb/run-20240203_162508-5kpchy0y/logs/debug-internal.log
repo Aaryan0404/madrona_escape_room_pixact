@@ -1,0 +1,199 @@
+2024-02-03 16:25:08,930 INFO    StreamThr :4023321 [internal.py:wandb_internal():86] W&B internal server running at pid: 4023321, started at: 2024-02-03 16:25:08.930210
+2024-02-03 16:25:08,931 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: status
+2024-02-03 16:25:08,933 INFO    WriterThread:4023321 [datastore.py:open_for_write():87] open: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/run-5kpchy0y.wandb
+2024-02-03 16:25:08,933 DEBUG   SenderThread:4023321 [sender.py:send():382] send: header
+2024-02-03 16:25:08,933 DEBUG   SenderThread:4023321 [sender.py:send():382] send: run
+2024-02-03 16:25:09,166 INFO    SenderThread:4023321 [dir_watcher.py:__init__():211] watching files in: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files
+2024-02-03 16:25:09,166 INFO    SenderThread:4023321 [sender.py:_start_run_threads():1136] run started: 5kpchy0y with start time 1707006308.929753
+2024-02-03 16:25:09,174 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: check_version
+2024-02-03 16:25:09,174 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: check_version
+2024-02-03 16:25:09,254 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: run_start
+2024-02-03 16:25:09,269 DEBUG   HandlerThread:4023321 [system_info.py:__init__():27] System info init
+2024-02-03 16:25:09,270 DEBUG   HandlerThread:4023321 [system_info.py:__init__():42] System info init done
+2024-02-03 16:25:09,270 INFO    HandlerThread:4023321 [system_monitor.py:start():194] Starting system monitor
+2024-02-03 16:25:09,270 INFO    SystemMonitor:4023321 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-02-03 16:25:09,270 INFO    HandlerThread:4023321 [system_monitor.py:probe():214] Collecting system info
+2024-02-03 16:25:09,271 INFO    SystemMonitor:4023321 [interfaces.py:start():190] Started cpu monitoring
+2024-02-03 16:25:09,271 INFO    SystemMonitor:4023321 [interfaces.py:start():190] Started disk monitoring
+2024-02-03 16:25:09,272 INFO    SystemMonitor:4023321 [interfaces.py:start():190] Started gpu monitoring
+2024-02-03 16:25:09,273 INFO    SystemMonitor:4023321 [interfaces.py:start():190] Started memory monitoring
+2024-02-03 16:25:09,274 INFO    SystemMonitor:4023321 [interfaces.py:start():190] Started network monitoring
+2024-02-03 16:25:09,280 DEBUG   HandlerThread:4023321 [system_info.py:probe():151] Probing system
+2024-02-03 16:25:09,282 DEBUG   HandlerThread:4023321 [system_info.py:_probe_git():136] Probing git
+2024-02-03 16:25:09,286 DEBUG   HandlerThread:4023321 [system_info.py:_probe_git():144] Probing git done
+2024-02-03 16:25:09,286 DEBUG   HandlerThread:4023321 [system_info.py:probe():199] Probing system done
+2024-02-03 16:25:09,286 DEBUG   HandlerThread:4023321 [system_monitor.py:probe():223] {'os': 'Linux-6.6.1-arch1-1-x86_64-with-glibc2.38', 'python': '3.11.5', 'heartbeatAt': '2024-02-04T00:25:09.280316', 'startedAt': '2024-02-04T00:25:08.927620', 'docker': None, 'cuda': None, 'args': ('--num-worlds', '1', '--num-updates', '1000', '--profile-report', '--fp16', '--gpu-sim', '--ckpt-dir', 'build/ckpts-debug', '--rawPixels'), 'state': 'running', 'program': '/home/syncthreads/mikey/madrona_escape_room_pixact/scripts/train.py', 'codePathLocal': 'scripts/train.py', 'codePath': 'scripts/train.py', 'git': {'remote': 'https://github.com/Aaryan0404/madrona_escape_room_pixact.git', 'commit': '3e3132ff3830f082d2fdf7f3eb1f1fd29147a41b'}, 'email': 'michael.d.nath@gmail.com', 'root': '/home/syncthreads/mikey/madrona_escape_room_pixact', 'host': 'gozag', 'username': 'syncthreads', 'executable': '/home/syncthreads/mikey/mikey_env/bin/python', 'cpu_count': 12, 'cpu_count_logical': 24, 'cpu_freq': {'current': 3616.513583333333, 'min': 2200.0, 'max': 3800.0}, 'cpu_freq_per_core': [{'current': 4005.788, 'min': 2200.0, 'max': 3800.0}, {'current': 4224.237, 'min': 2200.0, 'max': 3800.0}, {'current': 4160.371, 'min': 2200.0, 'max': 3800.0}, {'current': 4086.292, 'min': 2200.0, 'max': 3800.0}, {'current': 3454.623, 'min': 2200.0, 'max': 3800.0}, {'current': 2098.031, 'min': 2200.0, 'max': 3800.0}, {'current': 2200.0, 'min': 2200.0, 'max': 3800.0}, {'current': 2110.462, 'min': 2200.0, 'max': 3800.0}, {'current': 3996.533, 'min': 2200.0, 'max': 3800.0}, {'current': 4216.528, 'min': 2200.0, 'max': 3800.0}, {'current': 4216.639, 'min': 2200.0, 'max': 3800.0}, {'current': 3465.313, 'min': 2200.0, 'max': 3800.0}, {'current': 4028.905, 'min': 2200.0, 'max': 3800.0}, {'current': 4223.655, 'min': 2200.0, 'max': 3800.0}, {'current': 3920.346, 'min': 2200.0, 'max': 3800.0}, {'current': 4067.194, 'min': 2200.0, 'max': 3800.0}, {'current': 3474.385, 'min': 2200.0, 'max': 3800.0}, {'current': 2103.874, 'min': 2200.0, 'max': 3800.0}, {'current': 4224.281, 'min': 2200.0, 'max': 3800.0}, {'current': 2112.597, 'min': 2200.0, 'max': 3800.0}, {'current': 3979.948, 'min': 2200.0, 'max': 3800.0}, {'current': 4041.142, 'min': 2200.0, 'max': 3800.0}, {'current': 4051.257, 'min': 2200.0, 'max': 3800.0}, {'current': 3433.607, 'min': 2200.0, 'max': 3800.0}], 'disk': {'/': {'total': 915.3239631652832, 'used': 749.3519554138184}}, 'gpu': 'Quadro RTX 8000', 'gpu_count': 1, 'gpu_devices': [{'name': 'Quadro RTX 8000', 'memory_total': 51539607552}], 'memory': {'total': 62.70648193359375}}
+2024-02-03 16:25:09,286 INFO    HandlerThread:4023321 [system_monitor.py:probe():224] Finished collecting system info
+2024-02-03 16:25:09,286 INFO    HandlerThread:4023321 [system_monitor.py:probe():227] Publishing system info
+2024-02-03 16:25:09,287 INFO    HandlerThread:4023321 [system_monitor.py:probe():229] Finished publishing system info
+2024-02-03 16:25:09,288 DEBUG   SenderThread:4023321 [sender.py:send():382] send: files
+2024-02-03 16:25:09,288 INFO    SenderThread:4023321 [sender.py:_save_file():1403] saving file wandb-metadata.json with policy now
+2024-02-03 16:25:09,292 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: python_packages
+2024-02-03 16:25:09,292 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: python_packages
+2024-02-03 16:25:09,334 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-03 16:25:09,334 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-03 16:25:09,334 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: stop_status
+2024-02-03 16:25:09,495 DEBUG   SenderThread:4023321 [sender.py:send():382] send: telemetry
+2024-02-03 16:25:09,675 INFO    wandb-upload_0:4023321 [upload_job.py:push():131] Uploaded file /tmp/tmpw46uzawrwandb/6g9ogark-wandb-metadata.json
+2024-02-03 16:25:10,167 INFO    Thread-13 :4023321 [dir_watcher.py:_on_file_created():271] file/dir created: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/requirements.txt
+2024-02-03 16:25:10,167 INFO    Thread-13 :4023321 [dir_watcher.py:_on_file_created():271] file/dir created: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/wandb-metadata.json
+2024-02-03 16:25:11,167 INFO    Thread-13 :4023321 [dir_watcher.py:_on_file_created():271] file/dir created: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/output.log
+2024-02-03 16:25:13,167 INFO    Thread-13 :4023321 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/output.log
+2024-02-03 16:25:13,977 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: status_report
+2024-02-03 16:25:19,004 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: status_report
+2024-02-03 16:25:24,292 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-03 16:25:24,293 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: stop_status
+2024-02-03 16:25:24,293 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-03 16:25:24,403 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: status_report
+2024-02-03 16:25:29,429 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: status_report
+2024-02-03 16:25:34,798 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: status_report
+2024-02-03 16:25:39,293 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-03 16:25:39,293 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: stop_status
+2024-02-03 16:25:39,294 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-03 16:25:40,450 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: status_report
+2024-02-03 16:25:41,173 INFO    Thread-13 :4023321 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/config.yaml
+2024-02-03 16:25:45,524 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: status_report
+2024-02-03 16:25:50,525 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: status_report
+2024-02-03 16:25:54,293 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-03 16:25:54,293 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: stop_status
+2024-02-03 16:25:54,294 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-03 16:25:54,980 DEBUG   SenderThread:4023321 [sender.py:send():382] send: exit
+2024-02-03 16:25:54,980 INFO    SenderThread:4023321 [sender.py:send_exit():589] handling exit code: 1
+2024-02-03 16:25:54,980 INFO    SenderThread:4023321 [sender.py:send_exit():591] handling runtime: 45
+2024-02-03 16:25:54,982 INFO    SenderThread:4023321 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-03 16:25:54,982 INFO    SenderThread:4023321 [sender.py:send_exit():597] send defer
+2024-02-03 16:25:54,982 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:54,982 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 0
+2024-02-03 16:25:54,982 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:54,982 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 0
+2024-02-03 16:25:54,982 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 1
+2024-02-03 16:25:54,982 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:54,982 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 1
+2024-02-03 16:25:54,983 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:54,983 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 1
+2024-02-03 16:25:54,983 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 2
+2024-02-03 16:25:54,983 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:54,983 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 2
+2024-02-03 16:25:54,983 INFO    HandlerThread:4023321 [system_monitor.py:finish():203] Stopping system monitor
+2024-02-03 16:25:54,983 DEBUG   SystemMonitor:4023321 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-02-03 16:25:54,983 DEBUG   SystemMonitor:4023321 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-02-03 16:25:54,983 INFO    HandlerThread:4023321 [interfaces.py:finish():202] Joined cpu monitor
+2024-02-03 16:25:54,984 DEBUG   SystemMonitor:4023321 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-02-03 16:25:54,984 INFO    HandlerThread:4023321 [interfaces.py:finish():202] Joined disk monitor
+2024-02-03 16:25:55,035 INFO    HandlerThread:4023321 [interfaces.py:finish():202] Joined gpu monitor
+2024-02-03 16:25:55,035 INFO    HandlerThread:4023321 [interfaces.py:finish():202] Joined memory monitor
+2024-02-03 16:25:55,035 INFO    HandlerThread:4023321 [interfaces.py:finish():202] Joined network monitor
+2024-02-03 16:25:55,035 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:55,036 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 2
+2024-02-03 16:25:55,036 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 3
+2024-02-03 16:25:55,036 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:55,036 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 3
+2024-02-03 16:25:55,036 DEBUG   SenderThread:4023321 [sender.py:send():382] send: stats
+2024-02-03 16:25:55,036 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:55,036 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 3
+2024-02-03 16:25:55,036 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 4
+2024-02-03 16:25:55,036 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:55,036 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 4
+2024-02-03 16:25:55,037 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:55,037 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 4
+2024-02-03 16:25:55,037 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 5
+2024-02-03 16:25:55,037 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:55,037 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 5
+2024-02-03 16:25:55,037 DEBUG   SenderThread:4023321 [sender.py:send():382] send: summary
+2024-02-03 16:25:55,037 INFO    SenderThread:4023321 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-03 16:25:55,037 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:55,037 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 5
+2024-02-03 16:25:55,037 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 6
+2024-02-03 16:25:55,038 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:55,038 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 6
+2024-02-03 16:25:55,038 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:55,038 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 6
+2024-02-03 16:25:55,038 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 7
+2024-02-03 16:25:55,038 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: status_report
+2024-02-03 16:25:55,038 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:55,038 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 7
+2024-02-03 16:25:55,038 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:55,038 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 7
+2024-02-03 16:25:55,177 INFO    Thread-13 :4023321 [dir_watcher.py:_on_file_created():271] file/dir created: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/wandb-summary.json
+2024-02-03 16:25:55,979 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-03 16:25:56,986 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 8
+2024-02-03 16:25:56,986 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: poll_exit
+2024-02-03 16:25:56,986 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:56,986 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 8
+2024-02-03 16:25:56,986 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:56,987 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 8
+2024-02-03 16:25:56,987 INFO    SenderThread:4023321 [job_builder.py:build():296] Attempting to build job artifact
+2024-02-03 16:25:56,987 INFO    SenderThread:4023321 [job_builder.py:_get_source_type():426] is repo sourced job
+2024-02-03 16:25:57,013 INFO    SenderThread:4023321 [job_builder.py:build():402] adding wandb-job metadata file
+2024-02-03 16:25:57,015 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 9
+2024-02-03 16:25:57,015 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:57,015 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 9
+2024-02-03 16:25:57,015 DEBUG   SenderThread:4023321 [sender.py:send():382] send: artifact
+2024-02-03 16:25:57,177 INFO    Thread-13 :4023321 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/output.log
+2024-02-03 16:25:57,378 INFO    SenderThread:4023321 [sender.py:send_artifact():1494] sent artifact job-https___github.com_Aaryan0404_madrona_escape_room_pixact.git_scripts_train.py - {'id': 'QXJ0aWZhY3Q6NzEzMTYxNjc2', 'state': 'COMMITTED', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzNjg5Mzg3Nw==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzEzMTYxNjc2', 'versionIndex': 2}}}
+2024-02-03 16:25:57,378 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:57,378 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 9
+2024-02-03 16:25:57,378 INFO    SenderThread:4023321 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-02-03 16:25:57,979 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-03 16:25:58,178 INFO    SenderThread:4023321 [dir_watcher.py:finish():388] scan: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files
+2024-02-03 16:25:58,178 INFO    SenderThread:4023321 [dir_watcher.py:finish():402] scan save: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/wandb-summary.json wandb-summary.json
+2024-02-03 16:25:58,178 INFO    SenderThread:4023321 [dir_watcher.py:finish():402] scan save: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/wandb-metadata.json wandb-metadata.json
+2024-02-03 16:25:58,178 INFO    SenderThread:4023321 [dir_watcher.py:finish():402] scan save: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/requirements.txt requirements.txt
+2024-02-03 16:25:58,178 INFO    SenderThread:4023321 [dir_watcher.py:finish():402] scan save: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/output.log output.log
+2024-02-03 16:25:58,180 INFO    SenderThread:4023321 [dir_watcher.py:finish():402] scan save: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/config.yaml config.yaml
+2024-02-03 16:25:58,182 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 10
+2024-02-03 16:25:58,182 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: poll_exit
+2024-02-03 16:25:58,182 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:58,183 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 10
+2024-02-03 16:25:58,185 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:58,185 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 10
+2024-02-03 16:25:58,185 INFO    SenderThread:4023321 [file_pusher.py:finish():175] shutting down file pusher
+2024-02-03 16:25:58,440 INFO    wandb-upload_0:4023321 [upload_job.py:push():131] Uploaded file /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/requirements.txt
+2024-02-03 16:25:58,520 INFO    wandb-upload_1:4023321 [upload_job.py:push():131] Uploaded file /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/wandb-summary.json
+2024-02-03 16:25:58,553 INFO    wandb-upload_3:4023321 [upload_job.py:push():131] Uploaded file /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/config.yaml
+2024-02-03 16:25:58,566 INFO    wandb-upload_2:4023321 [upload_job.py:push():131] Uploaded file /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/files/output.log
+2024-02-03 16:25:58,766 INFO    Thread-12 (_thread_body):4023321 [sender.py:transition_state():617] send defer: 11
+2024-02-03 16:25:58,766 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:58,767 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 11
+2024-02-03 16:25:58,767 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:58,767 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 11
+2024-02-03 16:25:58,767 INFO    SenderThread:4023321 [file_pusher.py:join():181] waiting for file pusher
+2024-02-03 16:25:58,767 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 12
+2024-02-03 16:25:58,767 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:58,767 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 12
+2024-02-03 16:25:58,767 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:58,767 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 12
+2024-02-03 16:25:58,767 INFO    SenderThread:4023321 [file_stream.py:finish():595] file stream finish called
+2024-02-03 16:25:58,860 INFO    SenderThread:4023321 [file_stream.py:finish():599] file stream finish is done
+2024-02-03 16:25:58,860 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 13
+2024-02-03 16:25:58,860 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:58,860 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 13
+2024-02-03 16:25:58,861 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:58,861 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 13
+2024-02-03 16:25:58,861 INFO    SenderThread:4023321 [sender.py:transition_state():617] send defer: 14
+2024-02-03 16:25:58,861 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: defer
+2024-02-03 16:25:58,861 INFO    HandlerThread:4023321 [handler.py:handle_request_defer():172] handle defer: 14
+2024-02-03 16:25:58,861 DEBUG   SenderThread:4023321 [sender.py:send():382] send: final
+2024-02-03 16:25:58,861 DEBUG   SenderThread:4023321 [sender.py:send():382] send: footer
+2024-02-03 16:25:58,861 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: defer
+2024-02-03 16:25:58,861 INFO    SenderThread:4023321 [sender.py:send_request_defer():613] handle sender defer: 14
+2024-02-03 16:25:58,861 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-03 16:25:58,862 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: poll_exit
+2024-02-03 16:25:58,862 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-03 16:25:58,862 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: poll_exit
+2024-02-03 16:25:58,863 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: server_info
+2024-02-03 16:25:58,863 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: server_info
+2024-02-03 16:25:58,864 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: get_summary
+2024-02-03 16:25:58,865 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: sampled_history
+2024-02-03 16:25:58,865 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-03 16:25:58,865 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: job_info
+2024-02-03 16:25:58,918 DEBUG   SenderThread:4023321 [sender.py:send_request():409] send_request: job_info
+2024-02-03 16:25:58,919 INFO    MainThread:4023321 [wandb_run.py:_footer_history_summary_info():3857] rendering history
+2024-02-03 16:25:58,919 INFO    MainThread:4023321 [wandb_run.py:_footer_history_summary_info():3889] rendering summary
+2024-02-03 16:25:58,919 INFO    MainThread:4023321 [wandb_run.py:_footer_sync_info():3816] logging synced files
+2024-02-03 16:25:58,919 DEBUG   HandlerThread:4023321 [handler.py:handle_request():146] handle_request: shutdown
+2024-02-03 16:25:58,919 INFO    HandlerThread:4023321 [handler.py:finish():869] shutting down handler
+2024-02-03 16:25:59,865 INFO    WriterThread:4023321 [datastore.py:close():296] close: /home/syncthreads/mikey/madrona_escape_room_pixact/wandb/run-20240203_162508-5kpchy0y/run-5kpchy0y.wandb
+2024-02-03 16:25:59,919 INFO    SenderThread:4023321 [sender.py:finish():1572] shutting down sender
+2024-02-03 16:25:59,919 INFO    SenderThread:4023321 [file_pusher.py:finish():175] shutting down file pusher
+2024-02-03 16:25:59,919 INFO    SenderThread:4023321 [file_pusher.py:join():181] waiting for file pusher

@@ -1,0 +1,179 @@
+{
+    "os": "Linux-6.6.1-arch1-1-x86_64-with-glibc2.38",
+    "python": "3.11.5",
+    "heartbeatAt": "2024-02-04T00:34:19.454864",
+    "startedAt": "2024-02-04T00:34:19.106504",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--num-worlds",
+        "1",
+        "--num-updates",
+        "1000",
+        "--profile-report",
+        "--fp16",
+        "--gpu-sim",
+        "--ckpt-dir",
+        "build/ckpts-debug",
+        "--rawPixels"
+    ],
+    "state": "running",
+    "program": "/home/syncthreads/mikey/madrona_escape_room_pixact/scripts/train.py",
+    "codePathLocal": "scripts/train.py",
+    "codePath": "scripts/train.py",
+    "git": {
+        "remote": "https://github.com/Aaryan0404/madrona_escape_room_pixact.git",
+        "commit": "3e3132ff3830f082d2fdf7f3eb1f1fd29147a41b"
+    },
+    "email": "michael.d.nath@gmail.com",
+    "root": "/home/syncthreads/mikey/madrona_escape_room_pixact",
+    "host": "gozag",
+    "username": "syncthreads",
+    "executable": "/home/syncthreads/mikey/mikey_env/bin/python",
+    "cpu_count": 12,
+    "cpu_count_logical": 24,
+    "cpu_freq": {
+        "current": 4115.235,
+        "min": 2200.0,
+        "max": 3800.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 4058.682,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4179.439,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3520.228,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4193.853,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3848.134,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3353.844,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3631.362,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3810.057,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4107.846,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4032.981,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4199.286,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3868.06,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4176.298,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3533.031,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3640.321,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4199.673,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3533.007,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3354.914,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3944.35,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4072.556,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3808.222,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4194.483,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 4200.068,
+            "min": 2200.0,
+            "max": 3800.0
+        },
+        {
+            "current": 3375.411,
+            "min": 2200.0,
+            "max": 3800.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 915.3239631652832,
+            "used": 749.4210357666016
+        }
+    },
+    "gpu": "Quadro RTX 8000",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "Quadro RTX 8000",
+            "memory_total": 51539607552
+        }
+    ],
+    "memory": {
+        "total": 62.70648193359375
+    }
+}

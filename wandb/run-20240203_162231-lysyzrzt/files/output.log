@@ -1,0 +1,43 @@
+>>>                                                                        < Clear  >
+  num_updates: 1000
+  steps_per_update: 40
+  num_bptt_chunks: 8
+  lr: 0.0001
+  gamma: 0.998
+  ppo:
+    num_mini_batches: 1
+    clip_coef: 0.2
+    value_loss_coef: 0.5
+    entropy_coef: 0.01
+    max_grad_norm: 0.5
+    num_epochs: 2
+    clip_value_loss: False
+    adaptive_entropy: True
+  gae_lambda: 0.95
+  normalize_advantages: True
+  normalize_values: True
+  value_normalizer_decay: 0.999
+  mixed_precision: True
+[?1049h[?1006l[?1002l[?1000l)0[?25l
+Traceback (most recent call last):
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/scripts/train.py", line 155, in <module>
+    train(
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/train_src/madrona_escape_room_learn/train.py", line 382, in train
+    _update_loop(
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/train_src/madrona_escape_room_learn/train.py", line 319, in _update_loop
+    update_result = update_iter_fn(
+                    ^^^^^^^^^^^^^^^
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/train_src/madrona_escape_room_learn/train.py", line 246, in _update_iter
+    rollouts = rollout_mgr.collect(amp, sim, actor_critic, value_normalizer)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/train_src/madrona_escape_room_learn/rollouts.py", line 163, in collect
+    sim.step()
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/scripts/train.py", line 158, in <lambda>
+    step = lambda: sim.step(),
+  File "/home/syncthreads/mikey/anaconda3/lib/python3.11/bdb.py", line 92, in trace_dispatch
+    return self.dispatch_call(frame, arg)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/syncthreads/mikey/anaconda3/lib/python3.11/bdb.py", line 137, in dispatch_call
+    if self.quitting: raise BdbQuit
+                      ^^^^^^^^^^^^^
+bdb.BdbQuit

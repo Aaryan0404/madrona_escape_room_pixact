@@ -1,0 +1,129 @@
+TrainConfig:
+  num_updates: 1000
+  steps_per_update: 40
+  num_bptt_chunks: 8
+  lr: 0.0001
+  gamma: 0.998
+  ppo:
+    num_mini_batches: 1
+    clip_coef: 0.2
+    value_loss_coef: 0.5
+    entropy_coef: 0.01
+    max_grad_norm: 0.5
+    num_epochs: 2
+    clip_value_loss: False
+    adaptive_entropy: True
+  gae_lambda: 0.95
+  normalize_advantages: True
+  normalize_values: True
+  value_normalizer_decay: 0.999
+  mixed_precision: True
+Update: 1
+    Loss:  2.353e-01, A: -1.188e-04, V:  4.996e-01, E: -1.442e+00
+    Rewards          => Avg:  3.371e-04, Min: -5.001e-03, Max:  6.241e-02
+    Values           => Avg:  0.000e+00, Min:  0.000e+00, Max:  0.000e+00
+    Advantages       => Avg: -6.824e-03, Min: -8.179e-02, Max:  2.937e-01
+    Bootstrap Values => Avg:  0.000e+00, Min:  0.000e+00, Max:  0.000e+00
+    Returns          => Avg: 4.9173831939697266e-05, σ: 0.99951171875
+    Value Normalizer => Mean: -6.824e-03, σ: 4.778e-02
+    FPS: 1005, Update Time: 2.55, Avg FPS: 1005
+    PyTorch Memory Usage: 1.697GB (Reserved), 1.439GB (Current)
+    Update Iter Timing     => CPU: 2.547
+      Collect Rollouts     => CPU: 2.050
+        Cache RNN state    => CPU: 0.000
+        Policy Infer       => CPU: 1.523, GPU: 1.550
+        Simulator Step     => CPU: 0.151
+        Post Step Copy     => CPU: 0.002
+        Bootstrap Values   => CPU: 0.008
+      Compute Advantages   => CPU: 0.010
+      PPO                  => CPU: 0.486
+        Gather Minibatch   => CPU: 0.058, GPU: 0.061
+        AC Forward         => CPU: 0.085, GPU: 0.126
+          rnn.fwd_sequence => CPU: 0.004
+        Optimize           => CPU: 0.259
+Update: 10
+    Loss:  2.098e-01, A: -8.744e-05, V:  4.486e-01, E: -1.442e+00
+    Rewards          => Avg: -3.742e-03, Min: -5.001e-03, Max:  6.076e-02
+    Values           => Avg: -7.117e-02, Min: -7.117e-02, Max: -7.117e-02
+    Advantages       => Avg: -1.152e-02, Min: -7.410e-02, Max:  1.532e-01
+    Bootstrap Values => Avg: -7.117e-02, Min: -7.117e-02, Max: -7.117e-02
+    Returns          => Avg: -0.2979736328125, σ: 0.89501953125
+    Value Normalizer => Mean: -6.816e-02, σ: 4.996e-02
+    FPS: 1433, Update Time: 1.79, Avg FPS: 1607
+    PyTorch Memory Usage: 1.697GB (Reserved), 1.440GB (Current)
+    Update Iter Timing     => CPU: 1.646
+      Collect Rollouts     => CPU: 1.406
+        Cache RNN state    => CPU: 0.000
+        Policy Infer       => CPU: 0.955, GPU: 0.971
+        Simulator Step     => CPU: 0.138
+        Post Step Copy     => CPU: 0.002
+        Bootstrap Values   => CPU: 0.007
+      Compute Advantages   => CPU: 0.004
+      PPO                  => CPU: 0.235
+        Gather Minibatch   => CPU: 0.037, GPU: 0.040
+        AC Forward         => CPU: 0.032, GPU: 0.102
+          rnn.fwd_sequence => CPU: 0.004
+        Optimize           => CPU: 0.085
+Update: 20
+    Loss:  2.550e-01, A: -1.219e-04, V:  5.390e-01, E: -1.442e+00
+    Rewards          => Avg: -3.838e-03, Min: -5.001e-03, Max:  6.238e-02
+    Values           => Avg: -9.338e-02, Min: -9.338e-02, Max: -9.338e-02
+    Advantages       => Avg: -3.925e-03, Min: -7.031e-02, Max:  2.583e-01
+    Bootstrap Values => Avg: -9.338e-02, Min: -9.338e-02, Max: -9.338e-02
+    Returns          => Avg: -0.1922607421875, σ: 0.97265625
+    Value Normalizer => Mean: -8.756e-02, σ: 5.144e-02
+    FPS: 1967, Update Time: 1.30, Avg FPS: 1643
+    PyTorch Memory Usage: 1.697GB (Reserved), 1.440GB (Current)
+    Update Iter Timing     => CPU: 1.596
+      Collect Rollouts     => CPU: 1.371
+        Cache RNN state    => CPU: 0.000
+        Policy Infer       => CPU: 0.918, GPU: 0.933
+        Simulator Step     => CPU: 0.137
+        Post Step Copy     => CPU: 0.002
+        Bootstrap Values   => CPU: 0.007
+      Compute Advantages   => CPU: 0.004
+      PPO                  => CPU: 0.221
+        Gather Minibatch   => CPU: 0.036, GPU: 0.039
+        AC Forward         => CPU: 0.029, GPU: 0.101
+          rnn.fwd_sequence => CPU: 0.004
+        Optimize           => CPU: 0.075
+Update: 30
+    Loss:  2.665e-01, A: -1.423e-04, V:  5.621e-01, E: -1.442e+00
+    Rewards          => Avg: -3.983e-03, Min: -5.001e-03, Max:  6.201e-02
+    Values           => Avg: -1.063e-01, Min: -1.063e-01, Max: -1.062e-01
+    Advantages       => Avg:  1.328e-03, Min: -6.866e-02, Max:  1.785e-01
+    Bootstrap Values => Avg: -1.063e-01, Min: -1.063e-01, Max: -1.062e-01
+    Returns          => Avg: -0.11553955078125, σ: 0.98193359375
+    Value Normalizer => Mean: -9.895e-02, σ: 5.233e-02
+    FPS: 1599, Update Time: 1.60, Avg FPS: 1637
+    PyTorch Memory Usage: 1.697GB (Reserved), 1.440GB (Current)
+    Update Iter Timing     => CPU: 1.594
+      Collect Rollouts     => CPU: 1.375
+        Cache RNN state    => CPU: 0.000
+        Policy Infer       => CPU: 0.916, GPU: 0.931
+        Simulator Step     => CPU: 0.138
+        Post Step Copy     => CPU: 0.002
+        Bootstrap Values   => CPU: 0.007
+      Compute Advantages   => CPU: 0.003
+      PPO                  => CPU: 0.215
+        Gather Minibatch   => CPU: 0.035, GPU: 0.037
+        AC Forward         => CPU: 0.028, GPU: 0.100
+          rnn.fwd_sequence => CPU: 0.004
+        Optimize           => CPU: 0.072
+Traceback (most recent call last):
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/scripts/train.py", line 155, in <module>
+    train(
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/train_src/madrona_escape_room_learn/train.py", line 382, in train
+    _update_loop(
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/train_src/madrona_escape_room_learn/train.py", line 319, in _update_loop
+    update_result = update_iter_fn(
+                    ^^^^^^^^^^^^^^^
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/train_src/madrona_escape_room_learn/train.py", line 246, in _update_iter
+    rollouts = rollout_mgr.collect(amp, sim, actor_critic, value_normalizer)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/train_src/madrona_escape_room_learn/rollouts.py", line 162, in collect
+    sim.step()
+  File "/home/syncthreads/mikey/madrona_escape_room_pixact/scripts/train.py", line 158, in <lambda>
+    step = lambda: sim.step(),
+                   ^^^^^^^^^^
+KeyboardInterrupt

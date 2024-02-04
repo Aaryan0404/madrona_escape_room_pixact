@@ -1,0 +1,83 @@
+wandb_version: 1
+
+gpu_id:
+  desc: null
+  value: 0
+ckpt_dir:
+  desc: null
+  value: build/ckpts-debug
+restore:
+  desc: null
+  value: null
+num_worlds:
+  desc: null
+  value: 64
+num_updates:
+  desc: null
+  value: 1000
+steps_per_update:
+  desc: null
+  value: 40
+num_bptt_chunks:
+  desc: null
+  value: 8
+lr:
+  desc: null
+  value: 0.0001
+gamma:
+  desc: null
+  value: 0.998
+entropy_loss_coef:
+  desc: null
+  value: 0.01
+value_loss_coef:
+  desc: null
+  value: 0.5
+clip_value_loss:
+  desc: null
+  value: false
+num_channels:
+  desc: null
+  value: 256
+separate_value:
+  desc: null
+  value: false
+fp16:
+  desc: null
+  value: true
+gpu_sim:
+  desc: null
+  value: true
+profile_report:
+  desc: null
+  value: true
+rawPixels:
+  desc: null
+  value: true
+cpu:
+  desc: null
+  value: false
+_wandb:
+  desc: null
+  value:
+    python_version: 3.11.5
+    cli_version: 0.16.2
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1707004970.109363
+    t:
+      1:
+      - 1
+      - 55
+      2:
+      - 1
+      - 55
+      3:
+      - 16
+      - 23
+      4: 3.11.5
+      5: 0.16.2
+      8:
+      - 5
+      13: linux-x86_64
