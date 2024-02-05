@@ -138,7 +138,8 @@ args = arg_parser.parse_args()
 # NOTE: Uncomment to check bug with wandb
 wandb.init(
     project="madrona",
-    config=args
+    config=args,
+    name="{args.ckpt_dir}",
 )
 
 sim = madrona_escape_room.SimManager(

@@ -1,0 +1,5 @@
+[default]
+entity = aaryan04
+project = madrona
+base_url = https://api.wandb.ai
+
