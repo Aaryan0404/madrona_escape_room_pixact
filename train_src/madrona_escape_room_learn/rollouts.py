@@ -208,8 +208,6 @@ class RolloutManager:
         # but in the future could return only one set of buffers from a
         # double buffered store, etc
         
-        assert(torch.sum(self.obs[0]) != torch.sum(self.prev))
-        self.prev = self.obs[0].clone()
         return Rollouts(
             obs = self.obs,
             actions = self.actions,

@@ -79,7 +79,7 @@ def setup_obs(sim, raw_pixels=False):
         # ]
         num_channels = rgb_tensor.shape[-1] + depth_tensor.shape[-1]
         
-        return obs_tensors, num_channels
+        return obs_tensors, (num_channels * A)
 
 def process_obs(self_obs, partner_obs, room_ent_obs,
                 door_obs, lidar, steps_remaining, ids):
@@ -125,7 +125,7 @@ def process_pixels(rgb, depth):
     
     rgb = rgb / 255
     depth = depth / 255
-    breakpoint()
+
     rgb = rgb.view(rgb.shape[0]//2, 2, rgb.shape[1], rgb.shape[2], rgb.shape[3])
     depth = depth.view(depth.shape[0]//2, 2, depth.shape[1], depth.shape[2], depth.shape[3])
 
@@ -137,7 +137,7 @@ def process_pixels(rgb, depth):
 
     CNN_input = torch.cat([rgb, depth], dim=-1) # shape = B (N * A), W, H, C
     CNN_input = torch.cat([CNN_input, CNN_input], dim=0)
-    breakpoint()
+
     # NOTE: UNCOMMENT THIS IN ORDER TO SEE THE CONSTANT IMAGES BEING PASSED TO CNN
     # cv2.imwrite(f"pix_{time.time()}.png", rgb[0].cpu().numpy())
     return CNN_input.to(torch.float16)
