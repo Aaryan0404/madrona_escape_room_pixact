@@ -112,7 +112,7 @@ arg_parser.add_argument('--num-updates', type=int, required=True)
 arg_parser.add_argument('--steps-per-update', type=int, default=40)
 arg_parser.add_argument('--num-bptt-chunks', type=int, default=8)
 
-arg_parser.add_argument('--lr', type=float, default=1e-5)
+arg_parser.add_argument('--lr', type=float, default=1e-4)
 arg_parser.add_argument('--gamma', type=float, default=0.998)
 arg_parser.add_argument('--entropy-loss-coef', type=float, default=0.001)
 arg_parser.add_argument('--value-loss-coef', type=float, default=0.5)
@@ -196,7 +196,7 @@ train(
         num_bptt_chunks = args.num_bptt_chunks,
         lr = args.lr,
         gamma = args.gamma,
-        gae_lambda = 0.7,
+        gae_lambda = 0.95,
         ppo = PPOConfig(
             num_mini_batches=1,
             clip_coef=0.2,

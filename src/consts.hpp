@@ -35,7 +35,8 @@ inline constexpr float rewardPerAllButtons = 0.1f;
 
 // Each step that the agents don't make additional progress they get a small
 // penalty reward (progress towards button or in y direction)
-inline constexpr float slackReward = -0.05f;
+inline constexpr float slackReward = -0.005f;
+inline constexpr float slackReward2 = -0.0005f;
 
 // Steps per episode
 inline constexpr int32_t episodeLen = 200;

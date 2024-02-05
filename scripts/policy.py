@@ -79,7 +79,7 @@ def setup_obs(sim, raw_pixels=False):
         # ]
         num_channels = rgb_tensor.shape[-1] + depth_tensor.shape[-1]
         
-        return obs_tensors, (num_channels * A)
+        return obs_tensors, num_channels
 
 def process_obs(self_obs, partner_obs, room_ent_obs,
                 door_obs, lidar, steps_remaining, ids):
@@ -126,17 +126,17 @@ def process_pixels(rgb, depth):
     rgb = rgb / 255
     depth = depth / 255
 
-    rgb = rgb.view(rgb.shape[0]//2, 2, rgb.shape[1], rgb.shape[2], rgb.shape[3])
-    depth = depth.view(depth.shape[0]//2, 2, depth.shape[1], depth.shape[2], depth.shape[3])
+    # rgb = rgb.view(rgb.shape[0]//2, 2, rgb.shape[1], rgb.shape[2], rgb.shape[3])
+    # depth = depth.view(depth.shape[0]//2, 2, depth.shape[1], depth.shape[2], depth.shape[3])
 
-    rgb = rgb.permute(0, 2, 3, 1, 4)
-    depth = depth.permute(0, 2, 3, 1, 4)
+    # rgb = rgb.permute(0, 2, 3, 1, 4)
+    # depth = depth.permute(0, 2, 3, 1, 4)
 
-    rgb = rgb.reshape(rgb.shape[0], rgb.shape[1], rgb.shape[2], -1)
-    depth = depth.reshape(depth.shape[0], depth.shape[1], depth.shape[2], -1)
+    # rgb = rgb.reshape(rgb.shape[0], rgb.shape[1], rgb.shape[2], -1)
+    # depth = depth.reshape(depth.shape[0], depth.shape[1], depth.shape[2], -1)
 
     CNN_input = torch.cat([rgb, depth], dim=-1) # shape = B (N * A), W, H, C
-    CNN_input = torch.cat([CNN_input, CNN_input], dim=0)
+    # CNN_input = torch.cat([CNN_input, CNN_input], dim=0)
 
     # NOTE: UNCOMMENT THIS IN ORDER TO SEE THE CONSTANT IMAGES BEING PASSED TO CNN
     # cv2.imwrite(f"pix_{time.time()}.png", rgb[0].cpu().numpy())
