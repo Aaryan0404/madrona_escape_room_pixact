@@ -11,6 +11,8 @@ import argparse
 import math
 from pathlib import Path
 import warnings
+# NOTE: Uncomment to illustrate bug using wandb
+import wandb
 warnings.filterwarnings("error")
 
 torch.manual_seed(0)
@@ -78,13 +80,10 @@ arg_parser.add_argument('--restore', type=int)
 
 arg_parser.add_argument('--num-worlds', type=int, required=True)
 arg_parser.add_argument('--num-updates', type=int, required=True)
-arg_parser.add_argument('--steps-per-update', type=int, default=32)
-arg_parser.add_argument('--num-bptt-chunks', type=int, default=4)
+arg_parser.add_argument('--steps-per-update', type=int, default=40)
+arg_parser.add_argument('--num-bptt-chunks', type=int, default=8)
 
-# num updaates = 40, reserved = 28, use = 22
-# num updates = 24, reserved = 16, use = 13
-
-arg_parser.add_argument('--lr', type=float, default=1e-5)
+arg_parser.add_argument('--lr', type=float, default=1e-4)
 arg_parser.add_argument('--gamma', type=float, default=0.998)
 arg_parser.add_argument('--entropy-loss-coef', type=float, default=0.001)
 arg_parser.add_argument('--value-loss-coef', type=float, default=0.5)
@@ -107,13 +106,19 @@ arg_parser.add_argument("--cpu", action="store_true")
 
 args = arg_parser.parse_args()
 
+# NOTE: Uncomment to check bug with wandb
+wandb.init(
+    project="madrona-bug",
+    config=args
+)
+
 sim = madrona_escape_room.SimManager(
     exec_mode = madrona_escape_room.madrona.ExecMode.CUDA if args.gpu_sim else madrona_escape_room.madrona.ExecMode.CPU,
     gpu_id = args.gpu_id,
-    rand_seed = 0, 
+    rand_seed = 5, 
     num_worlds = args.num_worlds,
     auto_reset = True,
-    enable_batch_renderer = True if args.rawPixels else False,
+    enable_batch_renderer = True,
 )
 
 ckpt_dir = Path(args.ckpt_dir)

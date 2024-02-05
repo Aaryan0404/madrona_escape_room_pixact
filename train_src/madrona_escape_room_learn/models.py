@@ -29,8 +29,34 @@ class CNN(nn.Module):
         x = self.lay1(x)
         x = F.relu(self.lin2(x))
         x = self.lay2(x)
-
         return x
+
+class MLP(nn.Module):
+    def __init__(self, input_dim, num_channels, num_layers):
+        super().__init__()
+
+        layers = [
+            nn.Linear(input_dim, num_channels),
+            nn.LayerNorm(num_channels),
+            nn.ReLU(),
+        ]
+        for i in range(num_layers - 1):
+            layers.append(nn.Linear(num_channels, num_channels))
+            layers.append(nn.LayerNorm(num_channels))
+            layers.append(nn.ReLU())
+
+        self.net = nn.Sequential(*layers)
+
+        for layer in self.net:
+            if isinstance(layer, nn.Linear):
+                nn.init.kaiming_normal_(
+                    layer.weight, nn.init.calculate_gain("relu"))
+                if layer.bias is not None:
+                    nn.init.constant_(layer.bias, val=0)
+
+    def forward(self, inputs):
+        return self.net(inputs)
+
 
 class LinearLayerDiscreteActor(DiscreteActor):
     def __init__(self, actions_num_buckets, in_channels):

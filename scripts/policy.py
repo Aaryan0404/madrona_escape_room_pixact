@@ -7,13 +7,15 @@ from madrona_escape_room_learn import (
 
 from madrona_escape_room_learn.models import (
     CNN, LinearLayerDiscreteActor, LinearLayerCritic,
-    DenseLayerDiscreteActor, DenseLayerCritic,
+    DenseLayerDiscreteActor, DenseLayerCritic, MLP
 )
 
 from madrona_escape_room_learn.rnn import LSTM
 
 import math
 import torch
+
+import time
 
 import cv2
 
@@ -62,38 +64,31 @@ def setup_obs(sim, raw_pixels=False):
         
     else:
         rgb_tensor = rgb_tensor[:, :, :, :, 0:3]
-        depth_tensor = depth_tensor[:, :, :, :, 0:1]
 
-        # # take first three elems of batch
-        # input_1_a1 = rgb_tensor[0, 0, :, :, :]
-        # input_1_a2 = rgb_tensor[0, 1, :, :, :]
-
-        # # input_1_a1 = torch.concatenate([input_1_a1, depth_tensor[0, 0, :, :, :]], dim=-1)
-        # # input_1_a2 = torch.concatenate([input_1_a2, depth_tensor[0, 1, :, :, :]], dim=-1)
-
-        # # move to cpu
-        # input_1_a1 = input_1_a1.cpu().numpy()
-        # input_1_a2 = input_1_a2.cpu().numpy()
-
-        # # convert to images
-        # cv2.imwrite('input_1_a1.png', input_1_a1)
-        # cv2.imwrite('input_1_a2.png', input_1_a2)
-
-        # depth_tensor = depth_tensor[:, :, :, :, 0:1]
-
-        # N = rgb_tensor.shape[1]
-        # batch_size = rgb_tensor.shape[0]
-
-        # W, H = rgb_tensor.shape[2:4]
-
-        # rgb_tensor = rgb_tensor.permute(0, 2, 3, 1, 4).reshape(batch_size, W, H, 3 * N)
-        # depth_tensor = depth_tensor.permute(0, 2, 3, 1, 4).reshape(batch_size, W, H, 1 * N)
-
+        # permuted_rgb = rgb_tensor.permute(0, 2, 3, 4, 1)
+        # permuted_depth = depth_tensor.permute(0, 2, 3, 4, 1)
+        agent_1_rgb = rgb_tensor[:, 0]
+        agent_2_rgb = rgb_tensor[:, 1]
+        # reshaped_rgb = torch.cat((agent_1_rgb, agent_2_rgb), dim=-1)
+        agent_1_depth = depth_tensor[:, 0]
+        agent_2_depth = depth_tensor[:, 1]
+        # reshaped_depth = torch.cat((agent_1_depth, agent_2_depth), dim=-1) 
+        
+        # rgb_tensor = torch.cat((agent_1_rgb, agent_2_rgb), dim=0)
+        # depth_tensor = torch.cat((agent_1_depth, agent_2_depth), dim=0)
+        
+        rgb_tensor = rgb_tensor.view(-1, *(rgb_tensor.shape[2:]))
+        depth_tensor = depth_tensor.view(-1, *(depth_tensor.shape[2:]))
+        # raw pixels
+  
         obs_tensors = [
-            rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),         
-            depth_tensor.view(batch_size, *depth_tensor.shape[2:]),    
+            rgb_tensor,
+            depth_tensor,
         ]
-
+        # obs_tensors = [
+        #     rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),
+        #     depth_tensor.view(batch_size, *depth_tensor.shape[2:]),
+        # ]
         num_channels = rgb_tensor.shape[-1] + depth_tensor.shape[-1]
         
         return obs_tensors, num_channels
@@ -123,7 +118,7 @@ def process_obs(self_obs, partner_obs, room_ent_obs,
         lidar.view(lidar.shape[0], -1),
         steps_remaining.float() / 200,
         ids,
-    ], dim=1)
+    ], dim=1).half()
 
 def process_pixels(rgb, depth):
     assert(not torch.isnan(rgb).any())
@@ -137,17 +132,16 @@ def process_pixels(rgb, depth):
     assert(not torch.isinf(depth).any())
 
     # convert rgb to float
-    rgb = rgb.to(torch.float16)
+    rgb = rgb.to(torch.float32)
     # normal rgb values (3 channels in last dim of rgb tensor) are 0-255, so divide by 255
-    rgb = rgb[:, :, :, 0:3] / 255
-
-    # potentially normalize depth as well? 
+    
+    rgb = rgb / 255
+    depth = depth / 255
 
     CNN_input = torch.cat([rgb, depth], dim=-1) # shape = B (N * A), W, H, C
-    # CNN_input = CNN_input.reshape(rgb.shape[0], width//2, 2, height//2, 2, rgb.shape[-1] + depth.shape[-1])
-    # CNN_input = CNN_input.permute(0, 1, 3, 2, 4, 5)
-    # CNN_input = CNN_input.reshape(rgb.shape[0], width//2, height//2, 2 * 2 * (rgb.shape[-1] + depth.shape[-1]))
-
+    # breakpoint()
+    # NOTE: UNCOMMENT THIS IN ORDER TO SEE THE CONSTANT IMAGES BEING PASSED TO CNN
+    # cv2.imwrite(f"pix_{time.time()}.png", rgb[0].cpu().numpy())
     return CNN_input.to(torch.float16)
 
 def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
@@ -175,11 +169,11 @@ def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
 
         return ActorCritic(
             backbone = backbone,
-            actor = DenseLayerDiscreteActor(
+            actor = LinearLayerDiscreteActor(
                 [4, 8, 5, 2],
                 num_channels,
             ),
-            critic = DenseLayerCritic(num_channels),
+            critic = LinearLayerCritic(num_channels),
         )
     
     else:
@@ -187,7 +181,7 @@ def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
             net = MLP(
                 input_dim = dim_info,
                 num_channels = num_channels,
-                num_layers = 3,
+                num_layers = 1,
             ),
         )
 

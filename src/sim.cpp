@@ -525,6 +525,7 @@ inline void resetProgressSystem(Engine &ctx,
 inline void rewardSystem(Engine &ctx,
                          Position pos,
                          Progress &progress,
+                         SelfObservation obs,
                          Reward &out_reward)
 {
     float reward_pos_y = fminf(pos.y, consts::worldLength * 2);
@@ -546,6 +547,9 @@ inline void rewardSystem(Engine &ctx,
 
     float dx = reward_pos_x - b_x; 
     float dy = reward_pos_y - b_y; 
+
+    // incentivise agents to always look forward
+
 
     if (!progress.pressedButton) {
         // check to see if button is now pressed
@@ -577,6 +581,9 @@ inline void rewardSystem(Engine &ctx,
             out_reward.v = consts::slackReward;
         }
     }
+    // incentivise agents to always look forward
+    float forward_reward = -1 * fabs(obs.theta) / 100;
+    out_reward.v += forward_reward;
 }
 
 inline void doorRewardSystem(Engine &ctx,
@@ -741,6 +748,7 @@ void Sim::setupTasks(TaskGraphBuilder &builder, const Config &cfg)
          rewardSystem,
             Position,
             Progress,
+            SelfObservation,
             Reward
         >>({reset_progress_sys});
     
