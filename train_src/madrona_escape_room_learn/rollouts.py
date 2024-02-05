@@ -88,7 +88,6 @@ class RolloutManager:
             # expand shape to batch size
             batched_state_shape = (*rnn_state_shape[0:2],
                 sim.actions.shape[0], rnn_state_shape[2])
-
             rnn_end_state = torch.zeros(
                 batched_state_shape, dtype=amp.compute_dtype, device=dev)
             rnn_alt_state = torch.zeros_like(rnn_end_state)

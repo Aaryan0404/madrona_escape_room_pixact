@@ -16,6 +16,7 @@ import math
 import torch
 
 import time
+
 import cv2
 
 import torch.nn as nn
@@ -63,6 +64,7 @@ def setup_obs(sim, raw_pixels=False):
         
     else:
         rgb_tensor = rgb_tensor[:, :, :, :, 0:3]
+
         # permuted_rgb = rgb_tensor.permute(0, 2, 3, 4, 1)
         # permuted_depth = depth_tensor.permute(0, 2, 3, 4, 1)
         agent_1_rgb = rgb_tensor[:, 0]
@@ -78,6 +80,7 @@ def setup_obs(sim, raw_pixels=False):
         rgb_tensor = rgb_tensor.view(-1, *(rgb_tensor.shape[2:]))
         depth_tensor = depth_tensor.view(-1, *(depth_tensor.shape[2:]))
         # raw pixels
+  
         obs_tensors = [
             rgb_tensor,
             depth_tensor,
