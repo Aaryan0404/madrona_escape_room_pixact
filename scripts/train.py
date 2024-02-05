@@ -139,8 +139,9 @@ args = arg_parser.parse_args()
 wandb.init(
     project="madrona",
     config=args,
-    name="{args.ckpt_dir}",
+    name=f"pixact_{args.ckpt_dir}",
 )
+
 
 sim = madrona_escape_room.SimManager(
     exec_mode = madrona_escape_room.madrona.ExecMode.CUDA if args.gpu_sim else madrona_escape_room.madrona.ExecMode.CPU,

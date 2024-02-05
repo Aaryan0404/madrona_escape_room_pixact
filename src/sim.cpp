@@ -569,17 +569,16 @@ inline void rewardSystem(Engine &ctx,
             }
         }
     }
+    
+    float new_progress_y = reward_pos_y - progress.maxY;
+    if (new_progress_y > 0) {
+        // reward for maximizing y 
+        out_reward.v += new_progress_y * consts::rewardPerDist;
+        progress.maxY = reward_pos_y;
+    }
     else {
-        float new_progress_y = reward_pos_y - progress.maxY;
-        if (new_progress_y > 0) {
-            // reward for maximizing y 
-            out_reward.v = new_progress_y * consts::rewardPerDist;
-            progress.maxY = reward_pos_y;
-        }
-        else {
-            // penalize for not making progress
-            out_reward.v = consts::slackReward;
-        }
+        // penalize for not making progress
+        out_reward.v += consts::slackReward;
     }
 }
 

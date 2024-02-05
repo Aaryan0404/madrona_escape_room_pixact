@@ -64,18 +64,6 @@ def setup_obs(sim, raw_pixels=False):
         
     else:
         rgb_tensor = rgb_tensor[:, :, :, :, 0:3]
-
-        # permuted_rgb = rgb_tensor.permute(0, 2, 3, 4, 1)
-        # permuted_depth = depth_tensor.permute(0, 2, 3, 4, 1)
-        agent_1_rgb = rgb_tensor[:, 0]
-        agent_2_rgb = rgb_tensor[:, 1]
-        # reshaped_rgb = torch.cat((agent_1_rgb, agent_2_rgb), dim=-1)
-        agent_1_depth = depth_tensor[:, 0]
-        agent_2_depth = depth_tensor[:, 1]
-        # reshaped_depth = torch.cat((agent_1_depth, agent_2_depth), dim=-1) 
-        
-        # rgb_tensor = torch.cat((agent_1_rgb, agent_2_rgb), dim=0)
-        # depth_tensor = torch.cat((agent_1_depth, agent_2_depth), dim=0)
         
         rgb_tensor = rgb_tensor.view(-1, *(rgb_tensor.shape[2:]))
         depth_tensor = depth_tensor.view(-1, *(depth_tensor.shape[2:]))
@@ -137,9 +125,19 @@ def process_pixels(rgb, depth):
     
     rgb = rgb / 255
     depth = depth / 255
+    breakpoint()
+    rgb = rgb.view(rgb.shape[0]//2, 2, rgb.shape[1], rgb.shape[2], rgb.shape[3])
+    depth = depth.view(depth.shape[0]//2, 2, depth.shape[1], depth.shape[2], depth.shape[3])
+
+    rgb = rgb.permute(0, 2, 3, 1, 4)
+    depth = depth.permute(0, 2, 3, 1, 4)
+
+    rgb = rgb.reshape(rgb.shape[0], rgb.shape[1], rgb.shape[2], -1)
+    depth = depth.reshape(depth.shape[0], depth.shape[1], depth.shape[2], -1)
 
     CNN_input = torch.cat([rgb, depth], dim=-1) # shape = B (N * A), W, H, C
-    # breakpoint()
+    CNN_input = torch.cat([CNN_input, CNN_input], dim=0)
+    breakpoint()
     # NOTE: UNCOMMENT THIS IN ORDER TO SEE THE CONSTANT IMAGES BEING PASSED TO CNN
     # cv2.imwrite(f"pix_{time.time()}.png", rgb[0].cpu().numpy())
     return CNN_input.to(torch.float16)
