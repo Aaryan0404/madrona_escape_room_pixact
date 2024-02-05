@@ -52,6 +52,35 @@ class LearningCallback:
 
             vnorm_mu = learning_state.value_normalizer.mu.cpu().item()
             vnorm_sigma = learning_state.value_normalizer.sigma.cpu().item()
+        
+        wandb.log({
+            "update_id": update_id,
+            "loss": ppo.loss,
+            "action_loss": ppo.action_loss,
+            "value_loss": ppo.value_loss,
+            "entropy_loss": ppo.entropy_loss,
+            "reward_mean": reward_mean,
+            "reward_min": reward_min,
+            "reward_max": reward_max,
+            "value_mean": value_mean,
+            "value_min": value_min,
+            "value_max": value_max,
+            "advantage_mean": advantage_mean,
+            "advantage_min": advantage_min,
+            "advantage_max": advantage_max,
+            "bootstrap_value_mean": bootstrap_value_mean,
+            "bootstrap_value_min": bootstrap_value_min,
+            "bootstrap_value_max": bootstrap_value_max,
+            "returns_mean": ppo.returns_mean,
+            "returns_stddev": ppo.returns_stddev,
+            "vnorm_mu": vnorm_mu,
+            "vnorm_sigma": vnorm_sigma,
+            "fps": fps,
+            "update_time": update_time,
+            "mean_fps": self.mean_fps,
+            "pytorch_memory_reserved": torch.cuda.memory_reserved(),
+            "pytorch_max_memory_allocated": torch.cuda.max_memory_allocated()
+        })
 
         print(f"\nUpdate: {update_id}")
         print(f"    Loss: {ppo.loss: .3e}, A: {ppo.action_loss: .3e}, V: {ppo.value_loss: .3e}, E: {ppo.entropy_loss: .3e}")
@@ -83,7 +112,7 @@ arg_parser.add_argument('--num-updates', type=int, required=True)
 arg_parser.add_argument('--steps-per-update', type=int, default=40)
 arg_parser.add_argument('--num-bptt-chunks', type=int, default=8)
 
-arg_parser.add_argument('--lr', type=float, default=1e-4)
+arg_parser.add_argument('--lr', type=float, default=1e-5)
 arg_parser.add_argument('--gamma', type=float, default=0.998)
 arg_parser.add_argument('--entropy-loss-coef', type=float, default=0.001)
 arg_parser.add_argument('--value-loss-coef', type=float, default=0.5)
@@ -108,7 +137,7 @@ args = arg_parser.parse_args()
 
 # NOTE: Uncomment to check bug with wandb
 wandb.init(
-    project="madrona-bug",
+    project="madrona",
     config=args
 )
 
@@ -165,7 +194,7 @@ train(
         num_bptt_chunks = args.num_bptt_chunks,
         lr = args.lr,
         gamma = args.gamma,
-        gae_lambda = 0.95,
+        gae_lambda = 0.7,
         ppo = PPOConfig(
             num_mini_batches=1,
             clip_coef=0.2,
