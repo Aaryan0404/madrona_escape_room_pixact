@@ -581,9 +581,6 @@ inline void rewardSystem(Engine &ctx,
             out_reward.v = consts::slackReward;
         }
     }
-    // incentivise agents to always look forward
-    float forward_reward = -1 * fabs(obs.theta) / 100;
-    out_reward.v += forward_reward;
 }
 
 inline void doorRewardSystem(Engine &ctx,
