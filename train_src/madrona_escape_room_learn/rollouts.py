@@ -155,16 +155,14 @@ class RolloutManager:
 
                     # For now, the Policy Infer profile block ends here to get
                     # a CPU synchronization
-                    cur_actions_store = torch.tensor([[0,0,1,0],[0, 0, 1, 0]]).cuda() 
+                    # cur_actions_store = torch.tensor([[0,0,1,0],[0, 0, 1, 0]]).cuda() 
                     sim.actions.copy_(cur_actions_store)
                 # always_rotate_clockwise = torch.tensor([[0,0,1,0],[0, 0, 1, 0]]).cuda()
                 # sim.actions.copy_(always_rotate_clockwise)
-                # breakpoint()
                 # initial_obs  = sim.obs[0][0].clone()
                 with profile('Simulator Step'):
-                    for _ in range(29):
+                    for _ in range(1):
                         sim.step()
-                    # breakpoint()
 
                 with profile('Post Step Copy'):
                     self.rewards[bptt_chunk, slot].copy_(
@@ -180,14 +178,14 @@ class RolloutManager:
                 profile.gpu_measure(sync=True)
                 # add obs to frames buffer
                 # NOTE: Uncomment when using --rawPixels
-                # rgbs.append(sim.obs[0])
+                # rgbs.append(sim.obs[0].clone())
 
             # NOTE: Uncomment to see the constant frames in wandb (LEAVE THIS COMMENTED IF NOT USING --rawPixels)
             # frames = torch.stack(rgbs, dim=0)
             # frames = frames.permute(0, 1, 4, 2, 3)
 
-            # wandb.log({"agent_1": wandb.Video(frames[:, 0].cpu(), fps=2)})
-            # wandb.log({"agent_2": wandb.Video(frames[:, 1].cpu(), fps=2)})
+            # wandb.log({"agent_1": wandb.Video(frames[:, 0].cpu(), fps=1)})
+            # wandb.log({"agent_2": wandb.Video(frames[:, 1].cpu(), fps=1)})
             
 
         if self.need_obs_copy:
@@ -212,7 +210,7 @@ class RolloutManager:
         # double buffered store, etc
         
         # NOTE: THIS ASSERTION SHOULD PASS FOR NON-PIXEL OBS, BUT FAIL FOR PIXEL-OBS
-        assert(torch.sum(self.obs[0]) != torch.sum(self.prev))
+        # assert(torch.sum(self.obs[0]) != torch.sum(self.prev))
         self.prev = self.obs[0].clone()
         return Rollouts(
             obs = self.obs,

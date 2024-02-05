@@ -72,8 +72,11 @@ def setup_obs(sim, raw_pixels=False):
         agent_2_depth = depth_tensor[:, 1]
         # reshaped_depth = torch.cat((agent_1_depth, agent_2_depth), dim=-1) 
         
-        rgb_tensor = torch.cat((agent_1_rgb, agent_2_rgb), dim=0)
-        depth_tensor = torch.cat((agent_1_depth, agent_2_depth), dim=0)
+        # rgb_tensor = torch.cat((agent_1_rgb, agent_2_rgb), dim=0)
+        # depth_tensor = torch.cat((agent_1_depth, agent_2_depth), dim=0)
+        
+        rgb_tensor = rgb_tensor.view(-1, *(rgb_tensor.shape[2:]))
+        depth_tensor = depth_tensor.view(-1, *(depth_tensor.shape[2:]))
         # raw pixels
         obs_tensors = [
             rgb_tensor,
@@ -83,10 +86,9 @@ def setup_obs(sim, raw_pixels=False):
         #     rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),
         #     depth_tensor.view(batch_size, *depth_tensor.shape[2:]),
         # ]
-
         num_channels = rgb_tensor.shape[-1] + depth_tensor.shape[-1]
         
-        return obs_tensors.copy(), num_channels
+        return obs_tensors, num_channels
 
 def process_obs(self_obs, partner_obs, room_ent_obs,
                 door_obs, lidar, steps_remaining, ids):
@@ -129,8 +131,9 @@ def process_pixels(rgb, depth):
     # convert rgb to float
     rgb = rgb.to(torch.float32)
     # normal rgb values (3 channels in last dim of rgb tensor) are 0-255, so divide by 255
-    # rgb = rgb / 255
-    # depth = depth / 255
+    
+    rgb = rgb / 255
+    depth = depth / 255
 
     CNN_input = torch.cat([rgb, depth], dim=-1) # shape = B (N * A), W, H, C
     # breakpoint()

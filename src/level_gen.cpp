@@ -227,8 +227,7 @@ static void resetPersistentEntities(Engine &ctx)
              ctx.destroyEntity(grab_state.constraintEntity);
              grab_state.constraintEntity = Entity::none();
          }
-
-         ctx.get<Progress>(agent_entity).maxY = pos.y;
+         ctx.get<Progress>(agent_entity).agent_id = i;
 
          ctx.get<Velocity>(agent_entity) = {
              Vector3::zero(),
@@ -344,6 +343,7 @@ static Entity makeButton(Engine &ctx,
         consts::buttonWidth,
         0.2f,
     };
+
     ctx.get<ObjectID>(button) = ObjectID { (int32_t)SimObject::Button };
     ctx.get<ButtonState>(button).isPressed = false;
     ctx.get<EntityType>(button) = EntityType::Button;
@@ -444,6 +444,77 @@ static CountT makeDoubleButtonRoom(Engine &ctx,
 
     room.entities[0] = a;
     room.entities[1] = b;
+
+    float left_button_x;
+    float left_button_y;
+    float right_button_x;
+    float right_button_y;
+
+    int left_button_id; 
+    int right_button_id; 
+
+    // only for the first room
+    if (y_min == 0) {
+        left_button_x = a_x;
+        left_button_y = a_y;
+        right_button_x = b_x;
+        right_button_y = b_y;
+
+        left_button_id = 0;
+        right_button_id = 1;
+        
+        // if (a_x < b_x) {
+        //     left_button_x = a_x;
+        //     left_button_y = a_y;
+        //     right_button_x = b_x;
+        //     right_button_y = b_y;
+
+        //     left_button_id = 0; 
+        //     right_button_id = 1; 
+        // } 
+        // else {
+        //     left_button_x = b_x;
+        //     left_button_y = b_y;
+        //     right_button_x = a_x;
+        //     right_button_y = a_y;
+
+        //     left_button_id = 1;
+        //     right_button_id = 0;
+        // }
+
+        // add coords of these buttons to progres component of agents
+        for (CountT i = 0; i < consts::numAgents; i++) {
+            Entity agent_entity = ctx.data().agents[i];
+
+            // maybe we don't need this
+            int agent_id = ctx.get<Progress>(agent_entity).agent_id;
+
+            // agent x, y
+            float pos_x = ctx.get<Position>(agent_entity).x;
+            float pos_y = ctx.get<Position>(agent_entity).y;
+            
+            float dx, dy; 
+            if (pos_x < 0) {
+                // ctx.get<Progress>(agent_entity).buttonX = left_button_x;
+                // ctx.get<Progress>(agent_entity).buttonY = left_button_y;
+                ctx.get<Progress>(agent_entity).button_id  = left_button_id; 
+                dx = pos_x - left_button_x;
+                dy = pos_y - left_button_y;
+            } 
+            else {
+                // ctx.get<Progress>(agent_entity).buttonX = right_button_x;
+                // ctx.get<Progress>(agent_entity).buttonY = right_button_y;
+                ctx.get<Progress>(agent_entity).button_id  = right_button_id;
+                dx = pos_x - right_button_x;
+                dy = pos_y - right_button_y;
+            }
+
+            ctx.get<Progress>(agent_entity).initialDist   = sqrt(dx * dx + dy * dy);
+            ctx.get<Progress>(agent_entity).pressedButton = false; 
+            ctx.get<Progress>(agent_entity).pressedAllButtons = false;
+            ctx.get<Progress>(agent_entity).cur_room_idx  = 0;
+        }
+    }
 
     return 2;
 }
@@ -610,8 +681,8 @@ static void generateLevel(Engine &ctx)
 
     // For training simplicity, define a fixed sequence of levels.
     makeRoom(ctx, level, 0, RoomType::DoubleButton);
-    makeRoom(ctx, level, 1, RoomType::CubeBlocking);
-    makeRoom(ctx, level, 2, RoomType::CubeButtons);
+    makeRoom(ctx, level, 1, RoomType::DoubleButton);
+    makeRoom(ctx, level, 2, RoomType::DoubleButton);
 
 #if 0
     // An alternative implementation could randomly select the type for each

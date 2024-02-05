@@ -12,7 +12,7 @@ import math
 from pathlib import Path
 import warnings
 # NOTE: Uncomment to illustrate bug using wandb
-# import wandb
+import wandb
 warnings.filterwarnings("error")
 
 torch.manual_seed(0)
@@ -102,10 +102,10 @@ arg_parser.add_argument("--cpu", action="store_true")
 args = arg_parser.parse_args()
 
 # NOTE: Uncomment to check bug with wandb
-# wandb.init(
-#     project="madrona-bug",
-#     config=args
-# )
+wandb.init(
+    project="madrona-bug",
+    config=args
+)
 
 sim = madrona_escape_room.SimManager(
     exec_mode = madrona_escape_room.madrona.ExecMode.CUDA if args.gpu_sim else madrona_escape_room.madrona.ExecMode.CPU,
