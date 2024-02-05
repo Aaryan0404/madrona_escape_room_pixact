@@ -551,7 +551,7 @@ inline void rewardSystem(Engine &ctx,
     // incentivise agents to always look forward
 
 
-    if (!progress.pressedButton) {
+    if (!progress.pressedAllButtons) {
         // check to see if button is now pressed
         if (ctx.get<ButtonState>(button).isPressed) {
             out_reward.v = consts::buttonReward;
