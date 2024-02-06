@@ -564,8 +564,13 @@ inline void rewardSystem(Engine &ctx,
                 out_reward.v = consts::slackReward;
             }
             else {
-                // exponentially less reward for being further away
-                out_reward.v = fmaxf(consts::slackReward, fminf((-1.0f * expf((cur_dist / 13.0f))) + 1 + consts:buttonReward, consts:buttonReward)); 
+                // reward for making progress
+                if (cur_dist <= 0.75f) {
+                    out_reward.v = consts::buttonReward;
+                }
+                else {
+                    out_reward.v = consts::slackReward + (1.0f - (cur_dist / progress.initialDist)) * consts::buttonReward;
+                }
             }
         }
     }
