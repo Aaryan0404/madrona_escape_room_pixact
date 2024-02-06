@@ -29,7 +29,7 @@ inline constexpr float roomLength = worldLength / numRooms;
 inline constexpr float rewardPerDist = 0.08f;
 
 // Reward for button press
-inline constexpr float buttonDistReward = 0.0055f; 
+inline constexpr float buttonDistReward = 0.0075f; 
 
 // Reward for button press
 inline constexpr float buttonReward = 0.075f; 
