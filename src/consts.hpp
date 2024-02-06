@@ -29,16 +29,13 @@ inline constexpr float roomLength = worldLength / numRooms;
 inline constexpr float rewardPerDist = 0.08f;
 
 // Reward for button press
-inline constexpr float buttonDistReward = 0.0075f; 
-
-// Reward for button press
 inline constexpr float buttonReward = 0.075f; 
 // Reward for pressing all buttons
 inline constexpr float rewardPerAllButtons = 0.1f;
 
 // Each step that the agents don't make additional progress they get a small
 // penalty reward (progress towards button or in y direction)
-inline constexpr float slackReward = -0.005f;
+inline constexpr float slackReward = -0.05f;
 inline constexpr float slackReward2 = -0.0005f;
 
 // Steps per episode

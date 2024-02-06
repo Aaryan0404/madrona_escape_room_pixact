@@ -565,7 +565,7 @@ inline void rewardSystem(Engine &ctx,
             }
             else {
                 // reward for making progress
-                out_reward.v = consts::slackReward + (1.0f - (cur_dist / progress.initialDist)) * consts::buttonDistReward;
+                out_reward.v = fminf(consts::buttonReward - 0.01f, expf(-1.0f * (2 + cur_dist))); 
             }
         }
     }
