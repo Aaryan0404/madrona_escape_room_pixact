@@ -68,10 +68,19 @@ def setup_obs(sim, raw_pixels=False):
         rgb_tensor = rgb_tensor.view(-1, *(rgb_tensor.shape[2:]))
         depth_tensor = depth_tensor.view(-1, *(depth_tensor.shape[2:]))
         # raw pixels
+
+        # print rgb_tensor.shape   # 2048, 64, 64, 3
+        # print depth_tensor.shape # 2048, 64, 64, 1
+        # print id_tensor.shape    # 2048, 1
+
+        global_pos_tensor = self_obs_tensor.view(batch_size, *self_obs_tensor.shape[2:])
+        global_pos_tensor = global_pos_tensor[:, 2:5]
   
         obs_tensors = [
             rgb_tensor,
             depth_tensor,
+            id_tensor,
+            global_pos_tensor
         ]
         # obs_tensors = [
         #     rgb_tensor.view(batch_size, *rgb_tensor.shape[2:]),
@@ -108,7 +117,7 @@ def process_obs(self_obs, partner_obs, room_ent_obs,
         ids,
     ], dim=1).half()
 
-def process_pixels(rgb, depth):
+def process_pixels(rgb, depth, ids=None, global_pos=None):
     assert(not torch.isnan(rgb).any())
     assert(not torch.isinf(rgb).any())
 
@@ -140,7 +149,7 @@ def process_pixels(rgb, depth):
 
     # NOTE: UNCOMMENT THIS IN ORDER TO SEE THE CONSTANT IMAGES BEING PASSED TO CNN
     # cv2.imwrite(f"pix_{time.time()}.png", rgb[0].cpu().numpy())
-    return CNN_input.to(torch.float16)
+    return CNN_input.to(torch.float16), ids.to(torch.float16), global_pos.to(torch.float16)
 
 def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
     if raw_pixels:

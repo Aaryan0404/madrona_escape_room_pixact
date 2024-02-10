@@ -13,18 +13,23 @@ class CNN(nn.Module):
         self.conv2 = nn.Conv2d(32, 64, 3, 2, 1)
         self.conv3 = nn.Conv2d(64, 128, 3, 2, 1)
         self.conv4 = nn.Conv2d(128, 128, 3, 2, 1)
-        self.lin1  = nn.Linear(2048, 512)
+        self.lin1  = nn.Linear(2048 + 1 + 3, 512)
         self.lay1  = nn.LayerNorm(512)
         self.lin2  = nn.Linear(512, 256)
         self.lay2  = nn.LayerNorm(256)
         self.flatten = nn.Flatten()
 
     def forward(self, inputs):
-        x = inputs.permute(0, 3, 1, 2)
+        # x = inputs.permute(0, 3, 1, 2)
+        x, y, z = inputs[0].permute(0, 3, 1, 2), inputs[1], inputs[2]
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
         x = self.flatten(F.relu(self.conv4(x)))
+   
+        x = torch.cat([x, y], dim=1)
+        x = torch.cat([x, z], dim=1)
+
         x = F.relu(self.lin1(x))
         x = self.lay1(x)
         x = F.relu(self.lin2(x))
