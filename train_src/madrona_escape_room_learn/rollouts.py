@@ -180,11 +180,11 @@ class RolloutManager:
                 rgbs.append(sim.obs[0].clone())
 
             # NOTE: Uncomment to see the constant frames in wandb (LEAVE THIS COMMENTED IF NOT USING --rawPixels)
-            frames = torch.stack(rgbs, dim=0)
-            frames = frames.permute(0, 1, 4, 2, 3)
+            # frames = torch.stack(rgbs, dim=0)
+            # frames = frames.permute(0, 1, 4, 2, 3)
 
-        wandb.log({"agent_1": wandb.Video(frames[:, 0].cpu(), fps=1)})
-        wandb.log({"agent_2": wandb.Video(frames[:, 1].cpu(), fps=1)})
+        # wandb.log({"agent_1": wandb.Video(frames[:, 0].cpu(), fps=1)})
+        # wandb.log({"agent_2": wandb.Video(frames[:, 1].cpu(), fps=1)})
             
 
         if self.need_obs_copy:
