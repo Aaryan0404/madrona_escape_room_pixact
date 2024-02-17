@@ -140,6 +140,7 @@ wandb.init(
     project="madrona",
     config=args,
     name=f"pixact_{args.ckpt_dir}",
+    mode='disabled'
 )
 
 

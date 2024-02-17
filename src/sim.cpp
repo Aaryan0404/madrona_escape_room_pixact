@@ -424,7 +424,7 @@ inline void collectObservationsSystem(Engine &ctx,
         Vector3 other_pos = ctx.get<Position>(other);
         GrabState other_grab = ctx.get<GrabState>(other);
         Vector3 to_other = other_pos - pos;
-
+        
         partner_obs.obs[i] = {
             .polar = xyToPolar(to_view.rotateVec(to_other)),
             .isGrabbing = other_grab.constraintEntity != Entity::none() ?
