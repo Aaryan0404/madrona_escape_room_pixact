@@ -424,11 +424,19 @@ inline void collectObservationsSystem(Engine &ctx,
         Vector3 other_pos = ctx.get<Position>(other);
         GrabState other_grab = ctx.get<GrabState>(other);
         Vector3 to_other = other_pos - pos;
-
+        Vector3 view_pos = rot.inv().rotateVec(to_other);
+        float is_visible = 1;
+        if (view_pos.y <= 0.f) {
+            is_visible = 0;
+        }
+        if (!inFrustum(ctx, view_pos)) {
+            is_visible = 0;
+        }
         partner_obs.obs[i] = {
             .polar = xyToPolar(to_view.rotateVec(to_other)),
             .isGrabbing = other_grab.constraintEntity != Entity::none() ?
                 1.f : 0.f,
+            .isVisible = is_visible
         };
     }
 
@@ -446,6 +454,8 @@ inline void collectObservationsSystem(Engine &ctx,
         } else {
             Vector3 entity_pos = ctx.get<Position>(entity);
             EntityType entity_type = ctx.get<EntityType>(entity);
+            if (entity_type == EntityType::Agent)
+                printf("%d: %d\n", i, entity_type);
 
             Vector3 to_entity = entity_pos - pos;
             

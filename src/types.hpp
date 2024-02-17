@@ -77,6 +77,7 @@ struct PolarObservation {
 struct PartnerObservation {
     PolarObservation polar;
     float isGrabbing;
+    float isVisible;
 };
 
 // Egocentric observations of other agents
@@ -85,9 +86,9 @@ struct PartnerObservations {
 };
 
 // PartnerObservations is exported as a
-// [N, A, consts::numAgents - 1, 3] // tensor to pytorch
+// [N, A, consts::numAgents - 1, 4] // tensor to pytorch
 static_assert(sizeof(PartnerObservations) == sizeof(float) *
-    (consts::numAgents - 1) * 3);
+    (consts::numAgents - 1) * 4);
 
 // Per-agent egocentric observations for the interactable entities
 // in the current room.
