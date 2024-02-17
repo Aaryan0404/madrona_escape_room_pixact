@@ -29,6 +29,7 @@ def setup_obs(sim, raw_pixels=False):
     door_obs_tensor = sim.door_observation_tensor().to_torch()
     lidar_tensor = sim.lidar_tensor().to_torch()
     steps_remaining_tensor = sim.steps_remaining_tensor().to_torch()
+    room_ent_vis_tensor = sim.room_entity_visibilities_tensor().to_torch()
 
     if raw_pixels:
         rgb_tensor = sim.rgb_tensor().to_torch()   
@@ -53,6 +54,7 @@ def setup_obs(sim, raw_pixels=False):
             door_obs_tensor.view(batch_size, *door_obs_tensor.shape[2:]),
             lidar_tensor.view(batch_size, *lidar_tensor.shape[2:]),
             steps_remaining_tensor.view(batch_size, *steps_remaining_tensor.shape[2:]),
+            room_ent_vis_tensor.view(batch_size, *room_ent_vis_tensor.shape[2:]), 
             id_tensor,
         ]
 
@@ -91,7 +93,7 @@ def setup_obs(sim, raw_pixels=False):
         return obs_tensors, num_channels
 
 def process_obs(self_obs, partner_obs, room_ent_obs,
-                door_obs, lidar, steps_remaining, ids):
+                door_obs, lidar, steps_remaining, visbs, ids):
     assert(not torch.isnan(self_obs).any())
     assert(not torch.isinf(self_obs).any())
 
@@ -107,6 +109,10 @@ def process_obs(self_obs, partner_obs, room_ent_obs,
     assert(not torch.isnan(steps_remaining).any())
     assert(not torch.isinf(steps_remaining).any())
 
+
+    partner_obs_view = partner_obs.view(partner_obs.shape[0], -1)
+    breakpoint()
+    
     return torch.cat([
         self_obs.view(self_obs.shape[0], -1),
         partner_obs.view(partner_obs.shape[0], -1),
