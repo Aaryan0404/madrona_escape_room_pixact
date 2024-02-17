@@ -100,10 +100,17 @@ struct RoomEntityObservations {
     EntityObservation obs[consts::maxEntitiesPerRoom];
 };
 
+struct RoomEntityVisibilities {
+    int v[consts::maxEntitiesPerRoom];
+};
+
 // RoomEntityObservations is exported as a
 // [N, A, maxEntitiesPerRoom, 3] tensor to pytorch
 static_assert(sizeof(RoomEntityObservations) == sizeof(float) *
     consts::maxEntitiesPerRoom * 3);
+
+static_assert(sizeof(RoomEntityVisibilities) == sizeof(float) *
+    consts::maxEntitiesPerRoom * 1);
 
 // Observation of the current room's door. It's relative position and
 // whether or not it is ope
@@ -237,6 +244,7 @@ struct Agent : public madrona::Archetype<
     SelfObservation,
     PartnerObservations,
     RoomEntityObservations,
+    RoomEntityVisibilities,
     DoorObservation,
     Lidar,
     StepsRemaining,

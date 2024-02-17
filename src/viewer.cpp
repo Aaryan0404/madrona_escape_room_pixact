@@ -140,28 +140,32 @@ int main(int argc, char *argv[])
     auto lidar_printer = mgr.lidarTensor().makePrinter();
     auto steps_remaining_printer = mgr.stepsRemainingTensor().makePrinter();
     auto reward_printer = mgr.rewardTensor().makePrinter();
+    auto vis_printer = mgr.roomEntityVisibilitiesTensor().makePrinter();
 
     auto printObs = [&]() {
-        printf("Self\n");
-        self_printer.print();
+        // printf("Self\n");
+        // self_printer.print();
 
-        printf("Partner\n");
-        partner_printer.print();
+        // printf("Partner\n");
+        // partner_printer.print();
 
-        printf("Room Entities\n");
-        room_ent_printer.print();
+        // printf("Room Entities\n");
+        // room_ent_printer.print();
 
-        printf("Door\n");
-        door_printer.print();
+        // printf("Door\n");
+        // door_printer.print();
 
-        printf("Lidar\n");
-        lidar_printer.print();
+        // printf("Lidar\n");
+        // lidar_printer.print();
 
-        printf("Steps Remaining\n");
-        steps_remaining_printer.print();
+        // printf("Steps Remaining\n");
+        // steps_remaining_printer.print();
 
-        printf("Reward\n");
-        reward_printer.print();
+        // printf("Reward\n");
+        // reward_printer.print();
+        
+        printf("Visibilities\n");
+        vis_printer.print();
 
         printf("\n");
     };

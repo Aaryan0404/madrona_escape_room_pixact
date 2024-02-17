@@ -610,6 +610,18 @@ Tensor Manager::roomEntityObservationsTensor() const
                                });
 }
 
+Tensor Manager::roomEntityVisibilitiesTensor() const
+{
+    return impl_->exportTensor(ExportID::RoomEntityVisibilities,
+                               Tensor::ElementType::Int32,
+                               {
+                                   impl_->cfg.numWorlds,
+                                   consts::numAgents,
+                                   consts::maxEntitiesPerRoom,
+                                   1,
+                               });
+}
+
 Tensor Manager::doorObservationTensor() const
 {
     return impl_->exportTensor(ExportID::DoorObservation,

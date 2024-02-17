@@ -1,11 +1,14 @@
 #include <madrona/mw_gpu_entry.hpp>
 
+#include <iostream>
 #include "sim.hpp"
 #include "level_gen.hpp"
 
 using namespace madrona;
 using namespace madrona::math;
 using namespace madrona::phys;
+using namespace std;
+
 
 namespace RenderingSystem = madrona::render::RenderingSystem;
 
@@ -29,6 +32,7 @@ void Sim::registerTypes(ECSRegistry &registry, const Config &cfg)
     registry.registerComponent<OtherAgents>();
     registry.registerComponent<PartnerObservations>();
     registry.registerComponent<RoomEntityObservations>();
+    registry.registerComponent<RoomEntityVisibilities>();
     registry.registerComponent<DoorObservation>();
     registry.registerComponent<ButtonState>();
     registry.registerComponent<OpenState>();
@@ -55,6 +59,8 @@ void Sim::registerTypes(ECSRegistry &registry, const Config &cfg)
         (uint32_t)ExportID::PartnerObservations);
     registry.exportColumn<Agent, RoomEntityObservations>(
         (uint32_t)ExportID::RoomEntityObservations);
+    registry.exportColumn<Agent, RoomEntityVisibilities>(
+        (uint32_t)ExportID::RoomEntityVisibilities);
     registry.exportColumn<Agent, DoorObservation>(
         (uint32_t)ExportID::DoorObservation);
     registry.exportColumn<Agent, Lidar>(
@@ -95,6 +101,36 @@ static inline void initWorld(Engine &ctx)
 
     // Defined in src/level_gen.hpp / src/level_gen.cpp
     generateWorld(ctx);
+    
+    // set up frustum data
+    float aspect = 16.f / 9.f;
+    float f = 1.f / tanf(math::toRadians(90.f / 2.f));
+
+    Vector2 w = { f / aspect, 1.f };
+    Vector2 h = {          f, 1.f };
+    w *= w.invLength();
+    h *= h.invLength();
+    ctx.data().frustumData = {
+        w.x, w.y,
+        h.x, h.y,
+    };
+}
+
+inline bool inFrustum(Engine &ctx, Vector3 viewspace_pos)
+{
+    bool in_frustum = true;
+    
+    in_frustum = in_frustum &&
+        viewspace_pos.y * ctx.data().frustumData.y -
+        fabsf(viewspace_pos.x) * ctx.data().frustumData.x >
+        -consts::agentRadius;
+    
+    in_frustum = in_frustum &&
+        viewspace_pos.y * ctx.data().frustumData.w -
+        fabsf(viewspace_pos.z) * ctx.data().frustumData.z >
+        -consts::agentRadius;
+
+    return in_frustum;
 }
 
 // This system runs each frame and checks if the current episode is complete
@@ -361,6 +397,7 @@ inline void collectObservationsSystem(Engine &ctx,
                                       SelfObservation &self_obs,
                                       PartnerObservations &partner_obs,
                                       RoomEntityObservations &room_ent_obs,
+                                      RoomEntityVisibilities &room_ent_vis,
                                       DoorObservation &door_obs)
 {
     CountT cur_room_idx = CountT(pos.y / consts::roomLength);
@@ -405,11 +442,25 @@ inline void collectObservationsSystem(Engine &ctx,
         if (entity == Entity::none()) {
             ob.polar = { 0.f, 1.f };
             ob.encodedType = encodeType(EntityType::None);
+            room_ent_vis.v[i] = 0;
         } else {
             Vector3 entity_pos = ctx.get<Position>(entity);
             EntityType entity_type = ctx.get<EntityType>(entity);
 
             Vector3 to_entity = entity_pos - pos;
+            
+            Vector3 view_pos = rot.inv().rotateVec(to_entity);
+
+            room_ent_vis.v[i] = 1;
+
+            if (view_pos.y <= 0.f) {
+                room_ent_vis.v[i] = 0;
+            }
+
+            if (!inFrustum(ctx, view_pos)) {
+                room_ent_vis.v[i] = 0;
+            }
+
             ob.polar = xyToPolar(to_view.rotateVec(to_entity));
             ob.encodedType = encodeType(entity_type);
         }
@@ -461,7 +512,6 @@ inline void lidarSystem(Engine &ctx,
             };
         } else {
             EntityType entity_type = ctx.get<EntityType>(hit_entity);
-
             lidar.samples[idx] = {
                 .depth = distObs(hit_t),
                 .encodedType = encodeType(entity_type),
@@ -566,6 +616,7 @@ inline void rewardSystem(Engine &ctx,
             else {
                 // reward for making progress
                 out_reward.v = fminf(consts::buttonReward - 0.01f, expf(-1.0f * (2 + cur_dist))); 
+                progress.initialDist = cur_dist;
             }
         }
     }
@@ -802,6 +853,7 @@ void Sim::setupTasks(TaskGraphBuilder &builder, const Config &cfg)
             SelfObservation,
             PartnerObservations,
             RoomEntityObservations,
+            RoomEntityVisibilities,
             DoorObservation
         >>({post_reset_broadphase});
 
@@ -844,6 +896,7 @@ void Sim::setupTasks(TaskGraphBuilder &builder, const Config &cfg)
     (void)collect_obs;
 #endif
 }
+
 
 Sim::Sim(Engine &ctx,
          const Config &cfg,
