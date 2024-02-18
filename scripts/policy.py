@@ -59,9 +59,15 @@ def setup_obs(sim, raw_pixels=False):
         ]
 
         num_obs_features = 0
-        for tensor in obs_tensors:
-            num_obs_features += math.prod(tensor.shape[1:])
-
+        for i in range(len(obs_tensors)):
+            tensor = obs_tensors[i]
+            shape = list(tensor.size())
+            if i == 6:
+                continue
+            if i in [1, 3]:
+                # door obs and partner obs have a redundant isVisible field
+                shape[-1] -= 1
+            num_obs_features += math.prod(shape[1:])
         return obs_tensors, num_obs_features
         
     else:
@@ -111,13 +117,28 @@ def process_obs(self_obs, partner_obs, room_ent_obs,
 
 
     partner_obs_view = partner_obs.view(partner_obs.shape[0], -1)
-    breakpoint()
+    partner_masked = partner_obs_view.masked_fill(~partner_obs_view[..., -1:].bool(), -1.1)
     
+    door_obs_view = door_obs.view(door_obs.shape[0], -1)
+    door_obs_masked = door_obs_view.masked_fill(~door_obs_view[..., -1:].bool(), -1.1);
+    
+    # eject out the is_visibility fields - their purpose has been served
+    partner_masked = partner_masked[..., :-1]
+    door_obs_masked = door_obs_masked[..., :-1]
+    
+    # room_ent_obs_view = room_ent_obs.view(room_ent_obs.shape[0], -1)
+    room_ent_obs_masked = \
+        room_ent_obs.masked_fill(~visbs.bool(), -1.1) \
+        .view(room_ent_obs.shape[0], -1)
+
     return torch.cat([
         self_obs.view(self_obs.shape[0], -1),
-        partner_obs.view(partner_obs.shape[0], -1),
-        room_ent_obs.view(room_ent_obs.shape[0], -1),
-        door_obs.view(door_obs.shape[0], -1),
+        # partner_obs.view(partner_obs.shape[0], -1),
+        partner_masked,
+        # room_ent_obs.view(room_ent_obs.shape[0], -1),
+        room_ent_obs_masked,
+        # door_obs.view(door_obs.shape[0], -1),
+        door_obs_masked,
         lidar.view(lidar.shape[0], -1),
         steps_remaining.float() / 200,
         ids,
