@@ -118,6 +118,7 @@ static_assert(sizeof(RoomEntityVisibilities) == sizeof(float) *
 struct DoorObservation {
     PolarObservation polar;
     float isOpen; // 1.0 when open, 0.0 when closed.
+    float isVisible;
 };
 
 struct LidarSample {

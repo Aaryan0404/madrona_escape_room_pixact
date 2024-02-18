@@ -629,7 +629,7 @@ Tensor Manager::doorObservationTensor() const
                                {
                                    impl_->cfg.numWorlds,
                                    consts::numAgents,
-                                   3,
+                                   4,
                                });
 }
 

@@ -152,11 +152,11 @@ int main(int argc, char *argv[])
         // printf("Room Entities\n");
         // room_ent_printer.print();
 
-        // printf("Door\n");
-        // door_printer.print();
+        printf("Door\n");
+        door_printer.print();
 
-        printf("Lidar\n");
-        lidar_printer.print();
+        // printf("Lidar\n");
+        // lidar_printer.print();
 
         // printf("Steps Remaining\n");
         // steps_remaining_printer.print();
@@ -164,8 +164,8 @@ int main(int argc, char *argv[])
         // printf("Reward\n");
         // reward_printer.print();
         
-        printf("Visibilities\n");
-        vis_printer.print();
+        // printf("Visibilities\n");
+        // vis_printer.print();
 
         printf("\n");
     };

@@ -484,6 +484,17 @@ inline void collectObservationsSystem(Engine &ctx,
 
     door_obs.polar = xyToPolar(to_view.rotateVec(door_pos - pos));
     door_obs.isOpen = door_open_state.isOpen ? 1.f : 0.f;
+    Vector3 to_entity = door_pos - pos;
+    Vector3 view_pos = rot.inv().rotateVec(to_entity);
+    door_obs.isVisible = 1;
+    
+    if (view_pos.y <= 0.f) {
+        door_obs.isVisible = 0;
+    }
+    if (!inFrustum(ctx, view_pos)) {
+        door_obs.isVisible = 0;
+    }
+
 }
 
 // Launches consts::numLidarSamples per agent.
