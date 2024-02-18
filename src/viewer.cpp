@@ -155,8 +155,8 @@ int main(int argc, char *argv[])
         // printf("Door\n");
         // door_printer.print();
 
-        // printf("Lidar\n");
-        // lidar_printer.print();
+        printf("Lidar\n");
+        lidar_printer.print();
 
         // printf("Steps Remaining\n");
         // steps_remaining_printer.print();
