@@ -8,7 +8,6 @@ namespace consts {
 // Each random world is composed of a fixed number of rooms that the agents
 // must solve in order to maximize their reward.
 inline constexpr madrona::CountT numRooms = 3;
-// inline constexpr madrona::CountT numRooms = 1; 
 
 // Generated levels assume 2 agents
 inline constexpr madrona::CountT numAgents = 2;
@@ -26,17 +25,10 @@ inline constexpr float agentRadius = 1.f;
 inline constexpr float roomLength = worldLength / numRooms;
 
 // Each unit of distance forward (+ y axis) rewards the agents by this amount
-inline constexpr float rewardPerDist = 0.1f;
-
-// Reward for button press
-inline constexpr float buttonReward = 0.1f; 
-// Reward for pressing all buttons
-inline constexpr float rewardPerAllButtons = 0.25f;
-
+inline constexpr float rewardPerDist = 0.05f;
 // Each step that the agents don't make additional progress they get a small
-// penalty reward (progress towards button or in y direction)
-inline constexpr float slackReward = -0.05f;
-inline constexpr float slackReward2 = -0.005f;
+// penalty reward
+inline constexpr float slackReward = -0.005f;
 
 // Steps per episode
 inline constexpr int32_t episodeLen = 200;
@@ -47,7 +39,7 @@ inline constexpr madrona::CountT numMoveAngleBuckets = 8;
 inline constexpr madrona::CountT numTurnBuckets = 5;
 
 // Number of lidar samples, arranged in circle around agent
-inline constexpr madrona::CountT numLidarSamples = 1;
+inline constexpr madrona::CountT numLidarSamples = 30;
 
 // Time (seconds) per step
 inline constexpr float deltaT = 0.04f;
