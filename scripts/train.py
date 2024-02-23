@@ -140,7 +140,7 @@ wandb.init(
     project="madrona",
     config=args,
     name=f"pixact_{args.ckpt_dir}",
-    mode='online'
+    mode='disabled'
 )
 
 
@@ -150,7 +150,7 @@ sim = madrona_escape_room.SimManager(
     rand_seed = 5, 
     num_worlds = args.num_worlds,
     auto_reset = True,
-    enable_batch_renderer = True,
+    enable_batch_renderer = True
 )
 
 ckpt_dir = Path(args.ckpt_dir)

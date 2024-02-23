@@ -15,7 +15,11 @@ class CNN(nn.Module):
         self.conv4 = nn.Conv2d(128, 128, 3, 2, 1)
         self.lin1  = nn.Linear(2048, 512)
         self.lay1  = nn.LayerNorm(512)
-        self.lin2  = nn.Linear(512  + 1 + 3, 256)
+        
+        # self.lin2  = nn.Linear(512 + 3, 256)
+        # self.lin2  = nn.Linear(512, 256 - 3)
+        self.lin2  = nn.Linear(512  + 0 + 0, 256)
+        
         self.lay2  = nn.LayerNorm(256)
         self.flatten = nn.Flatten()
 
@@ -28,10 +32,12 @@ class CNN(nn.Module):
         x = self.flatten(F.relu(self.conv4(x)))
         x = F.relu(self.lin1(x))
         x = self.lay1(x)
-
-        x = torch.cat([x, y], dim=1)
-        x = torch.cat([x, z], dim=1)
         
+        # NOTE: this is the setting where we use agent coords
+        # x = F.relu(self.lin2(x))
+        # x = torch.cat([x, z], dim=1)
+        
+        # NOTE: this is the setting where we do not use agent coords
         x = F.relu(self.lin2(x))
         x = self.lay2(x)
         return x

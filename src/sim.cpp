@@ -1,6 +1,5 @@
 #include <madrona/mw_gpu_entry.hpp>
 
-#include <iostream>
 #include "sim.hpp"
 #include "level_gen.hpp"
 
@@ -553,39 +552,6 @@ inline void lidarSystem(Engine &ctx,
         traceRay(i);
     }
 #endif
-}
-
-inline void resetProgressSystem(Engine &ctx,
-                                Position pos,
-                                Progress &progress)
-{
-    float maxY   = progress.maxY;
-    int room_idx = maxY / (consts::roomLength * 1.025f);
-
-    if (room_idx > progress.cur_room_idx) {
-        progress.cur_room_idx = room_idx;
-
-        Entity button = ctx.singleton<LevelState>().rooms[room_idx].entities[progress.button_id];
-
-        float b_x = ctx.get<Position>(button).x;
-        float b_y = ctx.get<Position>(button).y;
-
-        float agent_y = fminf(pos.y, consts::worldLength * 2);
-        float agent_x; 
-        if (pos.x < 0) {
-            agent_x = fmaxf(pos.x, -consts::worldWidth);
-        }
-        else {
-            agent_x = fminf(pos.x, consts::worldWidth);
-        }
-
-        float dx = agent_x - b_x;
-        float dy = agent_y - b_y;
-
-        progress.initialDist       = sqrtf(dx * dx + dy * dy);
-        progress.pressedButton     = false;
-        progress.pressedAllButtons = false;
-    }
 }
 
 // Computes reward for each agent and keeps track of the max distance achieved

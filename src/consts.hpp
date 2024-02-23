@@ -39,7 +39,7 @@ inline constexpr madrona::CountT numMoveAngleBuckets = 8;
 inline constexpr madrona::CountT numTurnBuckets = 5;
 
 // Number of lidar samples, arranged in circle around agent
-inline constexpr madrona::CountT numLidarSamples = 30;
+inline constexpr madrona::CountT numLidarSamples = 1;
 
 // Time (seconds) per step
 inline constexpr float deltaT = 0.04f;

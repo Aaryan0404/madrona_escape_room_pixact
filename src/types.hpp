@@ -140,16 +140,8 @@ struct StepsRemaining {
 // Tracks progress the agent has made through the challenge, used to add
 // reward when more progress has been made
 struct Progress {
-    float initialDist;
     float maxY;
-
-    int button_id; 
-    bool pressedButton;
-    bool pressedAllButtons;
-
-    int cur_room_idx; 
     
-    int agent_id;
 };
 
 // Per-agent component storing Entity IDs of the other agents. Used to
@@ -167,8 +159,7 @@ struct GrabState {
 // classifying the objects hit by each lidar sample.
 enum class EntityType : uint32_t {
     None,
-    ButtonYellow,
-    ButtonPink,
+    Button,
     Cube,
     Wall,
     Agent,

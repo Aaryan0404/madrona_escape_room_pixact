@@ -35,7 +35,7 @@ args = arg_parser.parse_args()
 sim = madrona_escape_room.SimManager(
     exec_mode = madrona_escape_room.madrona.ExecMode.CUDA if args.gpu_sim else madrona_escape_room.madrona.ExecMode.CPU,
     gpu_id = args.gpu_id,
-    rand_seed = 10, 
+    rand_seed = 64, 
     num_worlds = args.num_worlds,
     auto_reset = True,
     enable_batch_renderer = True if args.rawPixels else False,
@@ -47,6 +47,8 @@ policy = make_policy(dim_info, args.num_channels, args.separate_value, args.rawP
 
 weights = LearningState.load_policy_weights(args.ckpt_path)
 policy.load_state_dict(weights)
+policy.eval()
+
 
 policy = policy.to(torch.device(f"cuda:{args.gpu_id}")).to(torch.float16 if args.fp16 else torch.float32)
 
@@ -72,7 +74,6 @@ else:
 
 for i in range(args.num_steps):
     with torch.no_grad():
-
         action_dists, values, cur_rnn_states = policy(cur_rnn_states, *obs)
         action_dists.best(actions)
 

@@ -53,7 +53,7 @@ def setup_obs(sim, raw_pixels=False):
             room_ent_obs_tensor.view(batch_size, *room_ent_obs_tensor.shape[2:]),
             door_obs_tensor.view(batch_size, *door_obs_tensor.shape[2:]),
             lidar_tensor.view(batch_size, *lidar_tensor.shape[2:]),
-            steps_remaining_tensor.view(batch_size, *steps_remaining_tensor.shape[2:]),
+            # steps_remaining_tensor.view(batch_size, *steps_remaining_tensor.shape[2:]),
             room_ent_vis_tensor.view(batch_size, *room_ent_vis_tensor.shape[2:]), 
             id_tensor,
         ]
@@ -62,7 +62,7 @@ def setup_obs(sim, raw_pixels=False):
         for i in range(len(obs_tensors)):
             tensor = obs_tensors[i]
             shape = list(tensor.size())
-            if i == 6:
+            if i == 5:
                 continue
             if i in [1, 3]:
                 # door obs and partner obs have a redundant isVisible field
@@ -83,7 +83,7 @@ def setup_obs(sim, raw_pixels=False):
 
         global_pos_tensor = self_obs_tensor.view(batch_size, *self_obs_tensor.shape[2:])
         global_pos_tensor = global_pos_tensor[:, 2:5]
-  
+        
         obs_tensors = [
             rgb_tensor,
             depth_tensor,
@@ -99,7 +99,7 @@ def setup_obs(sim, raw_pixels=False):
         return obs_tensors, num_channels
 
 def process_obs(self_obs, partner_obs, room_ent_obs,
-                door_obs, lidar, steps_remaining, visbs, ids):
+                door_obs, lidar, visbs, ids):
     assert(not torch.isnan(self_obs).any())
     assert(not torch.isinf(self_obs).any())
 
@@ -112,14 +112,16 @@ def process_obs(self_obs, partner_obs, room_ent_obs,
     assert(not torch.isnan(lidar).any())
     assert(not torch.isinf(lidar).any())
 
-    assert(not torch.isnan(steps_remaining).any())
-    assert(not torch.isinf(steps_remaining).any())
+    # assert(not torch.isnan(steps_remaining).any())
+    # assert(not torch.isinf(steps_remaining).any())
 
 
     partner_obs_view = partner_obs.view(partner_obs.shape[0], -1)
+    partner_obs_view[..., -1] = 1
     partner_masked = partner_obs_view.masked_fill(~partner_obs_view[..., -1:].bool(), -1.1)
     
     door_obs_view = door_obs.view(door_obs.shape[0], -1)
+    door_obs_view[..., -1] = 1
     door_obs_masked = door_obs_view.masked_fill(~door_obs_view[..., -1:].bool(), -1.1);
     
     # eject out the is_visibility fields - their purpose has been served
@@ -127,6 +129,7 @@ def process_obs(self_obs, partner_obs, room_ent_obs,
     door_obs_masked = door_obs_masked[..., :-1]
     
     # room_ent_obs_view = room_ent_obs.view(room_ent_obs.shape[0], -1)
+    visbs = torch.ones_like(visbs)
     room_ent_obs_masked = \
         room_ent_obs.masked_fill(~visbs.bool(), -1.1) \
         .view(room_ent_obs.shape[0], -1)
@@ -140,7 +143,7 @@ def process_obs(self_obs, partner_obs, room_ent_obs,
         # door_obs.view(door_obs.shape[0], -1),
         door_obs_masked,
         lidar.view(lidar.shape[0], -1),
-        steps_remaining.float() / 200,
+        # steps_remaining.float() / 200,
         ids,
     ], dim=1).half()
 
@@ -161,7 +164,6 @@ def process_pixels(rgb, depth, ids=None, global_pos=None):
     
     rgb = rgb / 255
     depth = depth / 255
-
     # rgb = rgb.view(rgb.shape[0]//2, 2, rgb.shape[1], rgb.shape[2], rgb.shape[3])
     # depth = depth.view(depth.shape[0]//2, 2, depth.shape[1], depth.shape[2], depth.shape[3])
 
@@ -189,13 +191,21 @@ def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
         #                num_layers = 1),
         # )
         
-        encoder = RecurrentBackboneEncoder(
-            net = CNN(in_channels = dim_info),
-            rnn = LSTM(in_channels = num_channels,
-                       hidden_channels = num_channels,
-                       num_layers = 1)
+        # encoder = RecurrentBackboneEncoder(
+        #     net = CNN(in_channels = dim_info),
+        #     rnn = LSTM(in_channels = num_channels,
+        #                hidden_channels = num_channels,
+        #                num_layers = 1)
+        # )
+        
+        
+        encoder = BackboneEncoder(
+            net = CNN(in_channels = dim_info)
         )
-
+        
+        # encoder.net.train()
+        # encoder.net.eval()
+        
         backbone = BackboneShared(
             process_obs = process_pixels,
             encoder = encoder,
@@ -211,12 +221,23 @@ def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
         )
     
     else:
-        encoder = BackboneEncoder(
+        # encoder = BackboneEncoder(
+        #     net = MLP(
+        #         input_dim = dim_info,
+        #         num_channels = num_channels,
+        #         num_layers = 3,
+        #     ),
+        # )
+        
+        encoder = RecurrentBackboneEncoder(
             net = MLP(
                 input_dim = dim_info,
                 num_channels = num_channels,
-                num_layers = 1,
+                num_layers = 3,
             ),
+            rnn = LSTM(in_channels = num_channels,
+                       hidden_channels = num_channels,
+                       num_layers = 1)
         )
 
         if separate_value:
