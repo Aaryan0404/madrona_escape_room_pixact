@@ -178,7 +178,7 @@ def process_pixels(rgb, depth, ids=None, global_pos=None):
 
     # NOTE: UNCOMMENT THIS IN ORDER TO SEE THE CONSTANT IMAGES BEING PASSED TO CNN
     # cv2.imwrite(f"pix_{time.time()}.png", rgb[0].cpu().numpy())
-    return CNN_input.to(torch.float16), ids.to(torch.float16), global_pos.to(torch.float16)
+    return CNN_input.to(torch.float16)
 
 def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
     if raw_pixels:
@@ -202,9 +202,6 @@ def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
         encoder = BackboneEncoder(
             net = CNN(in_channels = dim_info)
         )
-        
-        # encoder.net.train()
-        # encoder.net.eval()
         
         backbone = BackboneShared(
             process_obs = process_pixels,

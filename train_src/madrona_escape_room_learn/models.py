@@ -16,8 +16,6 @@ class CNN(nn.Module):
         self.lin1  = nn.Linear(2048, 512)
         self.lay1  = nn.LayerNorm(512)
         
-        # self.lin2  = nn.Linear(512 + 3, 256)
-        # self.lin2  = nn.Linear(512, 256 - 3)
         self.lin2  = nn.Linear(512  + 0 + 0, 256)
         
         self.lay2  = nn.LayerNorm(256)
@@ -25,19 +23,14 @@ class CNN(nn.Module):
 
     def forward(self, inputs):
         # x = inputs.permute(0, 3, 1, 2)
-        x, y, z = inputs[0].permute(0, 3, 1, 2), inputs[1], inputs[2]
+        x = inputs.permute(0, 3, 1, 2)
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
         x = F.relu(self.conv3(x))
         x = self.flatten(F.relu(self.conv4(x)))
         x = F.relu(self.lin1(x))
         x = self.lay1(x)
-        
-        # NOTE: this is the setting where we use agent coords
-        # x = F.relu(self.lin2(x))
-        # x = torch.cat([x, z], dim=1)
-        
-        # NOTE: this is the setting where we do not use agent coords
+
         x = F.relu(self.lin2(x))
         x = self.lay2(x)
         return x
