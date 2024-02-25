@@ -191,17 +191,17 @@ def make_policy(dim_info, num_channels, separate_value, raw_pixels=False):
         #                num_layers = 1),
         # )
         
-        # encoder = RecurrentBackboneEncoder(
-        #     net = CNN(in_channels = dim_info),
-        #     rnn = LSTM(in_channels = num_channels,
-        #                hidden_channels = num_channels,
-        #                num_layers = 1)
-        # )
-        
-        
-        encoder = BackboneEncoder(
-            net = CNN(in_channels = dim_info)
+        encoder = RecurrentBackboneEncoder(
+            net = CNN(in_channels = dim_info),
+            rnn = LSTM(in_channels = num_channels,
+                       hidden_channels = num_channels,
+                       num_layers = 1)
         )
+        
+        
+        # encoder = BackboneEncoder(
+        #     net = CNN(in_channels = dim_info)
+        # )
         
         backbone = BackboneShared(
             process_obs = process_pixels,

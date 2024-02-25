@@ -22,7 +22,6 @@ class CNN(nn.Module):
         self.flatten = nn.Flatten()
 
     def forward(self, inputs):
-        # x = inputs.permute(0, 3, 1, 2)
         x = inputs.permute(0, 3, 1, 2)
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
