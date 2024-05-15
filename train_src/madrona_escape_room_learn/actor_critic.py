@@ -90,6 +90,7 @@ class ActorCritic(nn.Module):
 
     def fwd_rollout(self, actions_out, log_probs_out, values_out,
                       rnn_states_out, rnn_states_in, *obs_in):
+        # breakpoint()
         actor_features, critic_features = self.backbone.fwd_rollout(
             rnn_states_out, rnn_states_in, *obs_in)
 
@@ -145,7 +146,6 @@ class RecurrentBackboneEncoder(nn.Module):
 
     def forward(self, rnn_states_in, *inputs):
         features = self.net(*inputs)
-
         rnn_out, new_rnn_states = self.rnn(features, rnn_states_in)
 
         return rnn_out, new_rnn_states
@@ -156,7 +156,7 @@ class RecurrentBackboneEncoder(nn.Module):
 
         # FIXME: proper inplace
         if rnn_states_out != None:
-            rnn_states_out[...] = rnn_states_in
+            rnn_states_out[...] = new_rnn_states
 
         return rnn_out
 

@@ -77,6 +77,7 @@ struct PolarObservation {
 struct PartnerObservation {
     PolarObservation polar;
     float isGrabbing;
+    float isVisible;
 };
 
 // Egocentric observations of other agents
@@ -85,9 +86,9 @@ struct PartnerObservations {
 };
 
 // PartnerObservations is exported as a
-// [N, A, consts::numAgents - 1, 3] // tensor to pytorch
+// [N, A, consts::numAgents - 1, 4] // tensor to pytorch
 static_assert(sizeof(PartnerObservations) == sizeof(float) *
-    (consts::numAgents - 1) * 3);
+    (consts::numAgents - 1) * 4);
 
 // Per-agent egocentric observations for the interactable entities
 // in the current room.
@@ -100,16 +101,24 @@ struct RoomEntityObservations {
     EntityObservation obs[consts::maxEntitiesPerRoom];
 };
 
+struct RoomEntityVisibilities {
+    int v[consts::maxEntitiesPerRoom];
+};
+
 // RoomEntityObservations is exported as a
 // [N, A, maxEntitiesPerRoom, 3] tensor to pytorch
 static_assert(sizeof(RoomEntityObservations) == sizeof(float) *
     consts::maxEntitiesPerRoom * 3);
+
+static_assert(sizeof(RoomEntityVisibilities) == sizeof(float) *
+    consts::maxEntitiesPerRoom * 1);
 
 // Observation of the current room's door. It's relative position and
 // whether or not it is ope
 struct DoorObservation {
     PolarObservation polar;
     float isOpen; // 1.0 when open, 0.0 when closed.
+    float isVisible;
 };
 
 struct LidarSample {
@@ -131,16 +140,8 @@ struct StepsRemaining {
 // Tracks progress the agent has made through the challenge, used to add
 // reward when more progress has been made
 struct Progress {
-    float initialDist;
     float maxY;
-
-    int button_id; 
-    bool pressedButton;
-    bool pressedAllButtons;
-
-    int cur_room_idx; 
     
-    int agent_id;
 };
 
 // Per-agent component storing Entity IDs of the other agents. Used to
@@ -158,8 +159,7 @@ struct GrabState {
 // classifying the objects hit by each lidar sample.
 enum class EntityType : uint32_t {
     None,
-    ButtonYellow,
-    ButtonPink,
+    Button,
     Cube,
     Wall,
     Agent,
@@ -237,6 +237,7 @@ struct Agent : public madrona::Archetype<
     SelfObservation,
     PartnerObservations,
     RoomEntityObservations,
+    RoomEntityVisibilities,
     DoorObservation,
     Lidar,
     StepsRemaining,

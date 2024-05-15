@@ -42,6 +42,7 @@ public:
     madrona::py::Tensor selfObservationTensor() const;
     madrona::py::Tensor partnerObservationsTensor() const;
     madrona::py::Tensor roomEntityObservationsTensor() const;
+    madrona::py::Tensor roomEntityVisibilitiesTensor() const;
     madrona::py::Tensor doorObservationTensor() const;
     madrona::py::Tensor lidarTensor() const;
     madrona::py::Tensor stepsRemainingTensor() const;

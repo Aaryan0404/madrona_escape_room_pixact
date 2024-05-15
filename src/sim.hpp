@@ -21,6 +21,7 @@ enum class ExportID : uint32_t {
     SelfObservation,
     PartnerObservations,
     RoomEntityObservations,
+    RoomEntityVisibilities,
     DoorObservation,
     Lidar,
     StepsRemaining,
@@ -34,10 +35,17 @@ enum class SimObject : uint32_t {
     Wall,
     Door,
     Agent,
-    ButtonYellow,
-    ButtonPink,
+    Button,
     Plane,
     NumObjects,
+};
+
+
+struct Frustum {
+    float x;
+    float y;
+    float z;
+    float w;
 };
 
 // The Sim class encapsulates the per-world state of the simulation.
@@ -102,6 +110,8 @@ struct Sim : public madrona::WorldBase {
     // Agent entity references. This entities live across all episodes
     // and are just reset to the start of the level on reset.
     Entity agents[consts::numAgents];
+
+    Frustum frustumData;
 };
 
 class Engine : public ::madrona::CustomContext<Engine, Sim> {

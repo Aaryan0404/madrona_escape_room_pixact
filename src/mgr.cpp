@@ -196,9 +196,7 @@ static void loadRenderObjects(render::RenderManager &render_mgr)
         (std::filesystem::path(DATA_DIR) / "wall_render.obj").string();
     render_asset_paths[(size_t)SimObject::Agent] =
         (std::filesystem::path(DATA_DIR) / "agent_render.obj").string();
-    render_asset_paths[(size_t)SimObject::ButtonYellow] =
-        (std::filesystem::path(DATA_DIR) / "cube_render.obj").string();
-    render_asset_paths[(size_t)SimObject::ButtonPink] =
+    render_asset_paths[(size_t)SimObject::Button] =
         (std::filesystem::path(DATA_DIR) / "cube_render.obj").string();
     render_asset_paths[(size_t)SimObject::Plane] =
         (std::filesystem::path(DATA_DIR) / "plane.obj").string();
@@ -224,7 +222,6 @@ static void loadRenderObjects(render::RenderManager &render_mgr)
         { math::Vector4{0.5f, 0.3f, 0.3f, 0.0f},  0, 0.8f, 0.2f,},
         { render::rgb8ToFloat(230, 20, 20),   -1, 0.8f, 1.0f },
         { render::rgb8ToFloat(230, 230, 20),   -1, 0.8f, 1.0f },
-        { render::rgb8ToFloat(230, 20, 160),   -1, 0.8f, 1.0f },
     });
 
     // Override materials
@@ -234,8 +231,7 @@ static void loadRenderObjects(render::RenderManager &render_mgr)
     render_assets->objects[(CountT)SimObject::Agent].meshes[0].materialIDX = 2;
     render_assets->objects[(CountT)SimObject::Agent].meshes[1].materialIDX = 3;
     render_assets->objects[(CountT)SimObject::Agent].meshes[2].materialIDX = 3;
-    render_assets->objects[(CountT)SimObject::ButtonYellow].meshes[0].materialIDX = 6;
-    render_assets->objects[(CountT)SimObject::ButtonPink].meshes[0].materialIDX = 7; 
+    render_assets->objects[(CountT)SimObject::Button].meshes[0].materialIDX = 6;
     render_assets->objects[(CountT)SimObject::Plane].meshes[0].materialIDX = 4;
 
     render_mgr.loadObjects(render_assets->objects, materials, {
@@ -261,10 +257,8 @@ static void loadPhysicsObjects(PhysicsLoader &loader)
         (std::filesystem::path(DATA_DIR) / "wall_collision.obj").string();
     asset_paths[(size_t)SimObject::Agent] =
         (std::filesystem::path(DATA_DIR) / "agent_collision_simplified.obj").string();
-    asset_paths[(size_t)SimObject::ButtonYellow] =
+    asset_paths[(size_t)SimObject::Button] =
         (std::filesystem::path(DATA_DIR) / "cube_collision.obj").string();
-    asset_paths[(size_t)SimObject::ButtonPink] =
-    (std::filesystem::path(DATA_DIR) / "cube_collision.obj").string();
 
     std::array<const char *, (size_t)SimObject::NumObjects - 1> asset_cstrs;
     for (size_t i = 0; i < asset_paths.size(); i++) {
@@ -331,12 +325,7 @@ static void loadPhysicsObjects(PhysicsLoader &loader)
         .muD = 0.5f,
     });
 
-    setupHull(SimObject::ButtonYellow, 1.f, {
-        .muS = 0.5f,
-        .muD = 0.5f,
-    });
-
-    setupHull(SimObject::ButtonPink, 1.f, {
+    setupHull(SimObject::Button, 1.f, {
         .muS = 0.5f,
         .muD = 0.5f,
     });
@@ -594,7 +583,7 @@ Tensor Manager::partnerObservationsTensor() const
                                    impl_->cfg.numWorlds,
                                    consts::numAgents,
                                    consts::numAgents - 1,
-                                   3,
+                                   4,
                                });
 }
 
@@ -610,6 +599,18 @@ Tensor Manager::roomEntityObservationsTensor() const
                                });
 }
 
+Tensor Manager::roomEntityVisibilitiesTensor() const
+{
+    return impl_->exportTensor(ExportID::RoomEntityVisibilities,
+                               Tensor::ElementType::Int32,
+                               {
+                                   impl_->cfg.numWorlds,
+                                   consts::numAgents,
+                                   consts::maxEntitiesPerRoom,
+                                   1,
+                               });
+}
+
 Tensor Manager::doorObservationTensor() const
 {
     return impl_->exportTensor(ExportID::DoorObservation,
@@ -617,7 +618,7 @@ Tensor Manager::doorObservationTensor() const
                                {
                                    impl_->cfg.numWorlds,
                                    consts::numAgents,
-                                   3,
+                                   4,
                                });
 }
 

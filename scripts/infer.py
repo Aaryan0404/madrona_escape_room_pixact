@@ -35,7 +35,7 @@ args = arg_parser.parse_args()
 sim = madrona_escape_room.SimManager(
     exec_mode = madrona_escape_room.madrona.ExecMode.CUDA if args.gpu_sim else madrona_escape_room.madrona.ExecMode.CPU,
     gpu_id = args.gpu_id,
-    rand_seed = 10, 
+    rand_seed = 69, 
     num_worlds = args.num_worlds,
     auto_reset = True,
     enable_batch_renderer = True if args.rawPixels else False,
@@ -58,6 +58,7 @@ actions = actions.view(-1, *actions.shape[2:])
 dones = dones.view(-1, *dones.shape[2:])
 rewards = rewards.view(-1, *rewards.shape[2:])
 
+policy.eval()
 cur_rnn_states = []
 
 for shape in policy.recurrent_cfg.shapes:
